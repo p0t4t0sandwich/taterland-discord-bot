@@ -145,14 +145,13 @@ def link_account(from_platform, from_platform_username, from_platform_id, to_pla
         if to_platform == "minecraft":
             mc_id_query = "SELECT player_id FROM player_data WHERE player_name = %(to_platform_username)s"
 
-            # Query to prevent re-assignment of minecraft accounts
-
-            # Check to see if minecraft account is in system
+            # Check to see if minecraft account is in system and prevent re-assignment of minecraft accounts
             anti_yoink_query = "SELECT " + from_platform + " FROM linked_accounts WHERE player_id = (SELECT player_id FROM player_data WHERE player_name = %(to_platform_username)s) LIMIT 1"
             cursor.execute(anti_yoink_query, account_data)
             data = cursor.fetchall()
-            print(data)
             if data != [(None,)] and data != []:
+                cursor.close()
+                cnx.close()
                 return f"This Minecraft username is already linked to a {from_platform} account, if you think this is an error please contact an admin.", 100
         else:
             mc_id_query = "SELECT player_id FROM linked_accounts WHERE " + from_platform + " = %(from_platform_username)s"
@@ -162,6 +161,8 @@ def link_account(from_platform, from_platform_username, from_platform_id, to_pla
             cursor.execute(anti_share_query, account_data)
             data = cursor.fetchall()
             if data != []:
+                cursor.close()
+                cnx.close()
                 return "This username is already in the system, if you think this is an error please contact an admin.", 100
 
         cursor.execute(mc_id_query, account_data)
@@ -170,6 +171,8 @@ def link_account(from_platform, from_platform_username, from_platform_id, to_pla
         if data != []:
             account_data["player_id"] = str(data[0][0])
         else:
+            cursor.close()
+            cnx.close()
             return err_msg, 400
 
         # Creates new entry if player not referenced in linked_accounts, otherwise updates entry.
@@ -211,8 +214,30 @@ def link_account(from_platform, from_platform_username, from_platform_id, to_pla
             cursor.execute(platform_id_query, account_data)
             cnx.commit()
 
-            cursor.close()
-            cnx.close()
+        # Reward players for linking accounts
+        if to_platform != "minecraft":
+            reward_check_query = "SELECT redeemed_" + to_platform + " FROM currency WHERE player_id = " + account_data["player_id"] + ";"
+            cursor.execute(reward_check_query)
+            data = cursor.fetchall()
+            if data == [(None,)]:
+                link_reward_query = "UPDATE currency SET tokens = tokens + 1 WHERE player_id = " + account_data["player_id"] + ";"
+                link_redeemed_query = "UPDATE currency SET redeemed_" + to_platform + " = 1 WHERE player_id = " + account_data["player_id"] + ";"
+                cursor.execute(link_reward_query)
+                cursor.execute(link_redeemed_query)
+                cnx.commit()
+        else:
+            reward_check_query = "SELECT redeemed_" + from_platform + " FROM currency WHERE player_id = " + account_data["player_id"] + ";"
+            cursor.execute(reward_check_query)
+            data = cursor.fetchall()
+            if data == [(None,)]:
+                link_reward_query = "UPDATE currency SET tokens = tokens + 1 WHERE player_id = " + account_data["player_id"] + ";"
+                link_redeemed_query = "UPDATE currency SET redeemed_" + from_platform + " = 1 WHERE player_id = " + account_data["player_id"] + ";"
+                cursor.execute(link_reward_query)
+                cursor.execute(link_redeemed_query)
+                cnx.commit()
+
+        cursor.close()
+        cnx.close()
 
         return f"You have successfully linked your {to_platform} account!", 200
 
@@ -223,6 +248,86 @@ def link_account(from_platform, from_platform_username, from_platform_id, to_pla
             print("Database does not exist")
         else:
             print(err)
+        cursor.close()
+        cnx.close()
+        return err_msg, 400
+    else:
+        cnx.close()
+
+# Function for linking different media accounts to the database.
+def bal(from_platform, from_platform_username):
+    import mysql.connector
+    from mysql.connector import errorcode
+    import os
+    """
+    Purpose:
+        To link user accounts within the database.
+    Pre-Conditions:
+        :param from_platform: The platform the user is linking from.
+        :param from_platform_username: The "from" platform username of the user.
+    Post-Conditions:
+        Link the specified user data within the database
+    Return:
+        A message notifying the user of their success/failure.
+    """
+
+    config = {
+            'user': os.getenv("MYSQL_USER"),
+            'password': os.getenv("MYSQL_PASSWORD"),
+            'host': os.getenv("MYSQL_HOST"),
+            'database': os.getenv("MYSQL_DATABASE"),
+            'raise_on_warnings': True
+        }
+
+    # Simple injection sterilization
+    from_platform = from_platform.replace("--","").replace("/*","").replace("%00","").replace("%16","")
+    from_platform_username = from_platform_username.replace("--","").replace("/*","").replace("%00","").replace("%16","")
+
+    err_msg = f"""
+            There doesn't seem to be a MC username linked with your account, @{from_platform_username}.
+            Please login to our MC server (!ip) if you haven't already, and then
+            use: "!link minecraft [username]".
+            ADDITIONAL NOTE FOR BEDROCK USERS:
+            Please ensure you include a period "." before your playername!
+            """
+
+    account_data = {
+        "from_platform": from_platform,
+        "from_platform_username": from_platform_username
+    }
+
+    try:
+        cnx = mysql.connector.connect(**config)
+        cursor = cnx.cursor()
+
+        mc_id_query = "SELECT player_id FROM linked_accounts WHERE " + from_platform + " = %(from_platform_username)s"
+        cursor.execute(mc_id_query, account_data)
+        data = cursor.fetchall()
+        if data != []:
+            account_data["player_id"] = str(data[0][0])
+        else:
+            cursor.close()
+            cnx.close()
+            return err_msg, 400
+
+        reward_check_query = "SELECT * FROM currency WHERE player_id = " + account_data["player_id"] + ";"
+        cursor.execute(reward_check_query)
+        data = cursor.fetchall()
+
+        cursor.close()
+        cnx.close()
+
+        return "Tokens: " + str(data[0][2]) + "\nChannel Point Tokens: " + str(data[0][5]) + "\nExploit Tokens: " + str(data[0][3]) + "\nDonator Tokens: " + str(data[0][4]), 200
+
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+        cursor.close()
+        cnx.close()
         return err_msg, 400
     else:
         cnx.close()

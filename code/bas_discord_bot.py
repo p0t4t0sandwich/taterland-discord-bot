@@ -11,7 +11,7 @@ import discord
 import os
 import bot_library as b
 
-path = "/bas_discord_bot/"
+path = "/home/dylan/code/projects/bas_network/bas_discord_bot/code/"#/bas_discord_bot/"
 
 class Bot():
     """
@@ -52,6 +52,36 @@ class Bot():
 
         # Output Discord Embed object
         return discord.Embed(title = "Help:", description = description, color = 0xe6d132)
+
+    def bal(self, channel, author, username):
+        """
+        Purpose:
+            To access the user's balance of special currency.
+        Pre-Conditions:
+            :param channel: The discord server the message was sent in (message.guild)
+            :param author: The Bot's name (discord.Client.user)
+            :param username: The Discord user's name
+        Post-Conditions:
+            None
+        Return:
+            A discord.Embed object
+        """
+        # Init variables
+        description, status = b.bal("discord", username)
+        
+        # Response logic
+        if status == 200:
+            title = "Balance:"
+            color = 0x65bf65
+        else:
+            title = "Error:"
+            color = 0xbf0f0f
+
+        # Log the data
+        self.log(channel, author, description)
+
+        # Output Discord Embed object
+        return discord.Embed(title = title, description = description, color = color)
 
     def link(self, channel, author, username, user_id, content):
         """
@@ -154,6 +184,12 @@ class Bot():
             if message.content.startswith('!link'):
                 self.log(channel, author, content)
                 statement = self.link(channel, client.user, str(author), message.author.id, content)
+                await message.channel.send(embed=statement)
+
+            # The !bal command and logging logic.
+            if message.content.startswith('!bal'):
+                self.log(channel, author, content)
+                statement = self.bal(channel, client.user, str(author))
                 await message.channel.send(embed=statement)
 
             # The !ip command and logging logic.
