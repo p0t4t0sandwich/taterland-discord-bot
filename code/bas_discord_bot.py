@@ -11,7 +11,7 @@ import discord
 import os
 import bot_library as b
 
-path = "/home/dylan/code/projects/bas_network/bas_discord_bot/code/"#/bas_discord_bot/"
+path = "/bas_discord_bot/"
 
 class Bot():
     """
@@ -72,6 +72,36 @@ class Bot():
         # Response logic
         if status == 200:
             title = "Balance:"
+            color = 0x65bf65
+        else:
+            title = "Error:"
+            color = 0xbf0f0f
+
+        # Log the data
+        self.log(channel, author, description)
+
+        # Output Discord Embed object
+        return discord.Embed(title = title, description = description, color = color)
+
+    def playtime(self, channel, author, username):
+        """
+        Purpose:
+            To access the user's playtime statistics.
+        Pre-Conditions:
+            :param channel: The discord server the message was sent in (message.guild)
+            :param author: The Bot's name (discord.Client.user)
+            :param username: The Discord user's name
+        Post-Conditions:
+            None
+        Return:
+            A discord.Embed object
+        """
+        # Init variables
+        description, status = b.playtime("discord", username)
+        
+        # Response logic
+        if status == 200:
+            title = "Playtime:"
             color = 0x65bf65
         else:
             title = "Error:"
@@ -196,6 +226,12 @@ class Bot():
             if message.content.startswith('!ip'):
                 self.log(channel, author, content)
                 statement = self.ip(channel, author)
+                await message.channel.send(embed=statement)
+
+            # The !playtime command and logging logic.
+            if message.content.startswith('!playtime'):
+                self.log(channel, author, content)
+                statement = self.playtime(channel, client.user, str(author))
                 await message.channel.send(embed=statement)
 
         client.run(self.bot_id)
