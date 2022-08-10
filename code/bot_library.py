@@ -261,14 +261,14 @@ def bal(from_platform, from_platform_username):
     import os
     """
     Purpose:
-        To link user accounts within the database.
+        To retrieve and return balance data for the specified user.
     Pre-Conditions:
         :param from_platform: The platform the user is linking from.
         :param from_platform_username: The "from" platform username of the user.
     Post-Conditions:
-        Link the specified user data within the database
+        Gather data from the database.
     Return:
-        A message notifying the user of their success/failure.
+        A message with the requested information or an error message.
     """
 
     config = {
@@ -318,6 +318,102 @@ def bal(from_platform, from_platform_username):
         cnx.close()
 
         return "Tokens: " + str(data[0][2]) + "\nChannel Point Tokens: " + str(data[0][5]) + "\nExploit Tokens: " + str(data[0][3]) + "\nDonator Tokens: " + str(data[0][4]), 200
+
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+        cursor.close()
+        cnx.close()
+        return err_msg, 400
+    else:
+        cnx.close()
+
+def playtime(from_platform, from_platform_username):
+    import mysql.connector
+    from mysql.connector import errorcode
+    import os
+    """
+    Purpose:
+        To retrieve and return playtime data for the specified user.
+    Pre-Conditions:
+        :param from_platform: The platform the user is linking from.
+        :param from_platform_username: The "from" platform username of the user.
+    Post-Conditions:
+        Gather data from the database.
+    Return:
+        A message with the requested information or an error message.
+    """
+
+    config = {
+            'user': os.getenv("MYSQL_USER"),
+            'password': os.getenv("MYSQL_PASSWORD"),
+            'host': os.getenv("MYSQL_HOST"),
+            'database': os.getenv("MYSQL_DATABASE"),
+            'raise_on_warnings': True
+        }
+
+    # Simple injection sterilization
+    from_platform = from_platform.replace("--","").replace("/*","").replace("%00","").replace("%16","")
+    from_platform_username = from_platform_username.replace("--","").replace("/*","").replace("%00","").replace("%16","")
+
+    err_msg = f"""
+            There doesn't seem to be a MC username linked with your account, @{from_platform_username}.
+            Please login to our MC server (!ip) if you haven't already, and then
+            use: "!link minecraft [username]".
+            ADDITIONAL NOTE FOR BEDROCK USERS:
+            Please ensure you include a period "." before your playername!
+            """
+
+    account_data = {
+        "database": os.getenv("MYSQL_DATABASE"),
+        "from_platform": from_platform,
+        "from_platform_username": from_platform_username
+    }
+
+    try:
+        cnx = mysql.connector.connect(**config)
+        cursor = cnx.cursor()
+
+        mc_id_query = "SELECT player_id FROM linked_accounts WHERE " + from_platform + " = %(from_platform_username)s"
+        cursor.execute(mc_id_query, account_data)
+        data = cursor.fetchall()
+        if data != []:
+            account_data["player_id"] = str(data[0][0])
+        else:
+            cursor.close()
+            cnx.close()
+            return err_msg, 400
+
+        playtime_query = "SELECT * FROM playtime WHERE player_id = " + account_data["player_id"]
+
+        cursor.execute(playtime_query)
+        data = cursor.fetchall()[0][2:]
+        
+        column_names_query = """
+            SELECT column_name from information_schema.columns
+            WHERE table_schema = %(database)s
+            AND table_name = 'playtime'
+            ORDER BY ordinal_position
+        """
+        cursor.execute(column_names_query, account_data)
+        columns = cursor.fetchall()
+        columns.remove(("playtime_id",))
+        columns.remove(("player_id",))
+
+        msg = f"Total Playtime: {sum(data)} min\n"
+
+        for i in range(len(columns)):
+            if data[i] != 0:
+                msg += f"{columns[i][0]}: {data[i]} min\n"
+
+        cursor.close()
+        cnx.close()
+
+        return msg, 200
 
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
