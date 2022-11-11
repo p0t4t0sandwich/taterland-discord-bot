@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from discord.ext import commands, tasks
-
+from mcstatus import JavaServer
 import os
 
 import bot_library as b
@@ -13,9 +13,12 @@ class ModdedServerManager(commands.Cog):
         self.target = None
         self.instances_dict = {}
         self.status_dict = {}
+        self.inactive_dict = {}
+        self.instance_addresses = {}
+        self.host = "172.16.1.175"
 
     # Function to authenticate and re-authenticate the instances.
-    async def auth_instances(self):
+    async def auth_instances(self) -> None:
         self.target = self.bot.targets[2]
 
         for instance in self.target["AvailableInstances"]:
@@ -32,6 +35,7 @@ class ModdedServerManager(commands.Cog):
                     await InstanceAPI.LoginAsync()
 
                     self.instances_dict[instance_name] = InstanceAPI
+                    self.instance_addresses[instance_name] = self.host + ":" + instance["ApplicationEndpoints"][0]["Endpoint"].split(":")[1]
                     self.status_dict[instance_name] = 0
 
                 else:
@@ -58,10 +62,30 @@ class ModdedServerManager(commands.Cog):
         else:
             return False
 
+    # Function to turn off servers after 15 min of inactivity.
+    async def shutdown_inactive_servers(self) -> None:
+        for instance_name in self.instances_dict.keys():
+            if instance_name not in ["Stoneblock301"]:
+                if instance_name not in self.inactive_dict.keys():
+                    self.inactive_dict[instance_name] = 0
+
+                java = await JavaServer.async_lookup(address=self.instance_addresses[instance_name], timeout=0.5)
+                try: 
+                    players = (await java.async_status()).players.online
+                except:
+                    players = -1
+
+                if players == 0:
+                    self.inactive_dict[instance_name] += 1
+
+                if self.inactive_dict[instance_name] >= 15:
+                    await self.instances_dict[instance_name].Core_StopAsync()
+
     @tasks.loop(minutes=1)
     async def task(self):
         try:
             await self.status_check()
+            await self.shutdown_inactive_servers()
         except:
             await self.auth_instances()
 
