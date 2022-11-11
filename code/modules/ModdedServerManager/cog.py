@@ -70,7 +70,7 @@ class ModdedServerManager(commands.Cog):
     async def start(self, ctx: commands.Context, *args) -> None:
         if args[0] in self.instances_dict:
             status = await self.confirm_server_activation(args[0])
-            if status == True:
+            if status:
                 await ctx.send(f"Server {args[0]} has been started")
             else:
                 await ctx.send(f"Not enough server slots available")
