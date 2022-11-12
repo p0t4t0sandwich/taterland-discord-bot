@@ -50,6 +50,8 @@ class BASBot(commands.Bot):
         ModdedServerManager.initModule()
         ModdedServerManager.update_status.start()
         ModdedServerManager.update_manager.start()
+        WatchFerret = self.get_cog("WatchFerret")
+        WatchFerret.get_status.start()
 
 if __name__ == "__main__":
     bot = BASBot()

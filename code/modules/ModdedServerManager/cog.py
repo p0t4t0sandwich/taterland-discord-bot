@@ -164,8 +164,6 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
     # Function to authenticate and re-authenticate the instances.
     async def auth_instance(self, instance_name: str) -> None:
         if self.bot.instances["AMP03"][instance_name]!= None:
-            #await self.bot.instances["AMP03"][instance_name].LoginAsync()
-
             b.bot_logger(self.bot.path, self.bot.name, f"Authenticated Instance: {instance_name}")
         else:
             b.bot_logger(self.bot.path, self.bot.name, f"Instance Offline: {instance_name}")
