@@ -45,10 +45,11 @@ class BASBot(commands.Bot):
         
         # On Ready Cog activities
         ADSHandler = self.get_cog("ADSHandler")
-        await ADSHandler.initADS()
+        await ADSHandler.initInstances()
         ModdedServerManager = self.get_cog("ModdedServerManager")
-        await ModdedServerManager.auth_instances()
-        await ModdedServerManager.task.start()
+        ModdedServerManager.initModule()
+        ModdedServerManager.update_status.start()
+        ModdedServerManager.update_manager.start()
 
 if __name__ == "__main__":
     bot = BASBot()

@@ -52,7 +52,7 @@ class AccountUtils(commands.Cog):
         self.bot.log(channel, self.bot.user, description)
 
         # Send Discord Embed object
-        statement = discord.Embed(title = "The BAS Network:", description = description, color = 0x09cddb)
+        statement = discord.Embed(title = "The BAS Network:", description = description, color = 0x877f23)
         statement.set_image(url = "https://api.mcsrvstat.us/icon/mc.basmc.ca")
         await ctx.reply(embed=statement)
 

@@ -13,9 +13,8 @@ class ADSHandler(commands.Cog):
         self.bot.amp_base_uri = "http://172.16.1.172:8080/"
         self.bot.amp_username = os.getenv("AMP_API_USER")
         self.bot.amp_password = os.getenv("AMP_API_PASSWORD")
-        self.bot.targets = None
 
-    async def initADS(self) -> None:
+    async def initInstances(self) -> None:
         self.bot.ADS = AMPAPIHandlerAsync(
             baseUri=self.bot.amp_base_uri,
             username=self.bot.amp_username,
@@ -26,6 +25,23 @@ class ADSHandler(commands.Cog):
         b.bot_logger(self.bot.path, self.bot.name, f"ADS Login: {status}")
 
         self.bot.targets = (await self.bot.ADS.ADSModule_GetInstancesAsync())["result"]
+        self.bot.instances = {}
+        for target in self.bot.targets:
+            instances = {}
+            target_name = target["FriendlyName"]
+
+            for instance in target["AvailableInstances"]:
+                instance_module = instance["Module"]
+                instance_id = instance["InstanceID"]
+
+                if instance_module == "Minecraft":
+                    instance_name = instance["InstanceName"]
+                    instances[instance_name] = await self.bot.ADS.InstanceLoginAsync(instance_id=instance_id)
+
+            self.bot.instances[target_name] = instances
+            b.bot_logger(self.bot.path, self.bot.name, f"Target Initialized: {target_name}")
+
+
 
     @tasks.loop(minutes=15)
     async def task(self):
