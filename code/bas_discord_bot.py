@@ -42,7 +42,7 @@ class BASBot(commands.Bot):
         b.bot_logger(self.path, self.name, f"We have logged in as {self.user}")
         self.owner_id = (await self.application_info()).owner.id
         await self.load_extensions()
-        
+
         # On Ready Cog activities
         ADSHandler = self.get_cog("ADSHandler")
         await ADSHandler.initInstances()

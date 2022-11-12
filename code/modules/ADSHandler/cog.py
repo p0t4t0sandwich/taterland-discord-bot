@@ -21,7 +21,7 @@ class ADSHandler(commands.Cog):
             password=self.bot.amp_password
         )
 
-        status = await self.bot.ADS.LoginAsync()
+        status = (await self.bot.ADS.LoginAsync())["success"]
         b.bot_logger(self.bot.path, self.bot.name, f"ADS Login: {status}")
 
         self.bot.targets = (await self.bot.ADS.ADSModule_GetInstancesAsync())["result"]

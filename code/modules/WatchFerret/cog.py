@@ -19,24 +19,26 @@ class WatchFerret(commands.Cog):
     async def get_status(self):
         for target_name in self.bot.instances.keys():
             for instance_name in self.bot.instances[target_name].keys():
-                result = await self.bot.instances[target_name][instance_name].Core_GetStatusAsync()
+                if self.bot.instances[target_name][instance_name] != None:
+                    result = await self.bot.instances[target_name][instance_name].Core_GetStatusAsync()
 
-                if instance_name not in self.status_dict.keys():
-                    self.status_dict[instance_name] = 0
+                    if instance_name not in self.status_dict.keys():
+                        self.status_dict[instance_name] = 0
 
-                if "State" in result:
-                    self.status_dict[instance_name] = result["State"]
-                else:
-                    self.auth_instance(target_name, instance_name)
+                    if "State" in result:
+                        status = result["State"]
+                    else:
+                        status = 0
+                        self.auth_instance(target_name, instance_name)
 
-                if result["State"] == 30:
-                    self.status_dict[instance_name] += 1
+                    if status == 30:
+                        self.status_dict[instance_name] += 1
 
-                if self.status_dict[instance_name] >= 2:
-                    b.bot_logger(self.bot.path, self.bot.name, f"Watchdog Event Detected: {instance_name}")
-                    await self.bot.instances[target_name][instance_name].Core_KillAsync()
-                    await self.bot.instances[target_name][instance_name].Core_StartAsync()
-                    b.bot_logger(self.bot.path, self.bot.name, f"Instance Has Been Rescued: {instance_name}")
+                    if self.status_dict[instance_name] >= 2:
+                        b.bot_logger(self.bot.path, self.bot.name, f"WatchFerret Event Detected: {instance_name}")
+                        await self.bot.instances[target_name][instance_name].Core_KillAsync()
+                        await self.bot.instances[target_name][instance_name].Core_StartAsync()
+                        b.bot_logger(self.bot.path, self.bot.name, f"Instance Has Been Rescued: {instance_name}")
 
 async def setup(bot: commands.bot) -> None:
     await bot.add_cog(WatchFerret(bot))
