@@ -19,8 +19,9 @@ class BASBot(commands.Bot):
     def __init__(self) -> None:
         intents = discord.Intents.default()
         intents.message_content = True
-        self.path = "./bas_discord_bot/"
+        self.path = "/bas_discord_bot/"
         self.name = "bas_discord_bot"
+        self.synced = True
 
         super().__init__(
             command_prefix=commands.when_mentioned_or("!"),
@@ -42,6 +43,9 @@ class BASBot(commands.Bot):
         b.bot_logger(self.path, self.name, f"We have logged in as {self.user}")
         self.owner_id = (await self.application_info()).owner.id
         await self.load_extensions()
+        if not self.synced:
+            await self.tree.sync()
+            self.synced = True
 
         # On Ready Cog activities
         ADSHandler = self.get_cog("ADSHandler")
@@ -55,7 +59,7 @@ class BASBot(commands.Bot):
 
 if __name__ == "__main__":
     bot = BASBot()
-    #bot.run(token=os.getenv("BOT_ID"))
-    from dotenv import load_dotenv
-    load_dotenv()
     bot.run(token=os.getenv("BOT_ID"))
+    # from dotenv import load_dotenv
+    # load_dotenv()
+    # bot.run(token=os.getenv("BOT_ID"))

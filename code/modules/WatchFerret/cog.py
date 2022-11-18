@@ -1,7 +1,4 @@
 from discord.ext import commands, tasks
-
-import os
-
 import bot_library as b
 
 class WatchFerret(commands.Cog):

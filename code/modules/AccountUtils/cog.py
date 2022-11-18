@@ -9,7 +9,35 @@ class AccountUtils(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    @commands.command()
+    @commands.hybrid_command()
+    async def bal(self, ctx: commands.Context) -> None:
+        """To access the user's balance of special currency."""
+
+        # Init variables
+        channel = ctx.guild.name
+        author = str(ctx.author)
+        content = ctx.message.content
+
+        # Init variables
+        description, status = b.bal("discord", author)
+
+        # Response logic
+        if status == 200:
+            title = "Balance:"
+            color = 0x65bf65
+        else:
+            title = "Error:"
+            color = 0xbf0f0f
+
+        # Log the data
+        self.bot.log(channel, author, content)
+        self.bot.log(channel, self.bot.user, description)
+
+        # Send Discord Embed object
+        statement = discord.Embed(title = title, description = description, color = color)
+        await ctx.reply(embed=statement)
+
+    @commands.hybrid_command()
     async def playtime(self, ctx: commands.Context) -> None:
         """Access the user's playtime statistics."""
 
@@ -36,7 +64,7 @@ class AccountUtils(commands.Cog):
         statement = discord.Embed(title = title, description = description, color = color)
         await ctx.reply(embed=statement)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def ip(self, ctx: commands.Context) -> None:
         """Make the minecraft server info readily available."""
 
