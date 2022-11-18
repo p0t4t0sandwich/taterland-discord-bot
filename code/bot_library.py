@@ -1,19 +1,22 @@
-#!/bin/python3
+#!/usr/bin/python3.10
 #--------------------------------------------------------------------
 # Project: Bot Function Library
 # Purpose: Simplify creation of Discord bots.
 # Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
 # Date: 10AUGUST2021
-# Updated: 3AUGUST2022 - p0t4t0sandwich
-#   - Added the linking database logic to be shared between bots.
+# Updated: 23SEPTEMBER2022 - p0t4t0sandwich
+#   - Added the logic for implementing Discord Webhooks
+#   - Added interactions with the AMP API - Send Command
+#   - Added a method to query wether a platform account is linked
+#     to a MC account
 #--------------------------------------------------------------------
 
 # green -> 0x65bf65
 # yellow -> 0xe6d132
 # red -> 0xbf0f0f
 
-# Function for simple logging
-def bot_logger(path, bot, string):
+# Function for simple logging.
+def bot_logger(path: str, bot: str, string: str) -> None:
     from datetime import datetime
     import os
     """
@@ -43,7 +46,8 @@ def bot_logger(path, bot, string):
     file.close()
 
 
-def get_twitch_id(twitch_name):
+# Function to pull the user's Twitch ID from the Twitch API.
+def get_twitch_id(twitch_name: str) -> int:
     import requests
     import json
     import os
@@ -84,7 +88,7 @@ def get_twitch_id(twitch_name):
 
 
 # Function for linking different media accounts to the database.
-def link_account(from_platform, from_platform_username, from_platform_id, to_platform, to_platform_username):
+def link_account(from_platform: str, from_platform_username: str, from_platform_id: int, to_platform: str, to_platform_username: str) -> str | int:
     import mysql.connector
     from mysql.connector import errorcode
     import os
@@ -254,8 +258,9 @@ def link_account(from_platform, from_platform_username, from_platform_id, to_pla
     else:
         cnx.close()
 
-# Function for linking different media accounts to the database.
-def bal(from_platform, from_platform_username):
+
+# Function for getting the user's balance.
+def bal(from_platform: str, from_platform_username: str) -> str | int:
     import mysql.connector
     from mysql.connector import errorcode
     import os
@@ -332,7 +337,9 @@ def bal(from_platform, from_platform_username):
     else:
         cnx.close()
 
-def playtime(from_platform, from_platform_username):
+
+# Function to retrieve the user's playtime stats.
+def playtime(from_platform: str, from_platform_username: str)  -> str | int:
     import mysql.connector
     from mysql.connector import errorcode
     import os
@@ -414,6 +421,156 @@ def playtime(from_platform, from_platform_username):
         cnx.close()
 
         return msg, 200
+
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+        cursor.close()
+        cnx.close()
+        return err_msg, 400
+    else:
+        cnx.close()
+
+
+# Function to check wether an account exists for the specified platform.
+def account_exists(from_platform:  str, from_platform_username: str) -> str | int:
+    import mysql.connector
+    from mysql.connector import errorcode
+    import os
+    """
+    Purpose:
+        To validate wether specified account is currently in the system.
+    Pre-Conditions:
+        :param from_platform: The platform the user is from.
+        :param from_platform_username: The "from" platform username of the user.
+    Post-Conditions:
+        Gather data from the database.
+    Return:
+        A message with the requested information or an error message.
+    """
+
+    config = {
+            'user': os.getenv("MYSQL_USER"),
+            'password': os.getenv("MYSQL_PASSWORD"),
+            'host': os.getenv("MYSQL_HOST"),
+            'database': os.getenv("MYSQL_DATABASE"),
+            'raise_on_warnings': True
+        }
+
+    # Simple injection sterilization
+    from_platform = from_platform.replace("--","").replace("/*","").replace("%00","").replace("%16","")
+    from_platform_username = from_platform_username.replace("--","").replace("/*","").replace("%00","").replace("%16","")
+
+    err_msg = f"""
+            There doesn't seem to be a MC username linked with this account,
+            please advise @{from_platform_username} to join the network before continuing.
+            """
+
+    account_data = {
+        "database": os.getenv("MYSQL_DATABASE"),
+        "from_platform": from_platform,
+        "from_platform_username": from_platform_username
+    }
+
+    try:
+        cnx = mysql.connector.connect(**config)
+        cursor = cnx.cursor()
+
+        account_exists_query = "SELECT player_id FROM linked_accounts WHERE " + from_platform + " = %(from_platform_username)s"
+        cursor.execute(account_exists_query, account_data)
+        data = cursor.fetchall()
+        if data != []:
+            cursor.close()
+            cnx.close()
+
+            msg = f"The {from_platform} account, {from_platform_username} exists in our system!\n"
+            return msg, 200
+        else:
+            cursor.close()
+            cnx.close()
+            return err_msg, 400
+
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+        cursor.close()
+        cnx.close()
+        return err_msg, 400
+    else:
+        cnx.close()
+
+# Function to get the user's Minecraft UUID and username
+def get_minecraft_account(from_platform:  str, from_platform_username: str) -> str | int | tuple:
+    import mysql.connector
+    from mysql.connector import errorcode
+    import os
+    """
+    Purpose:
+        To retrieve the user's Minecraft username and UUID using the stored user info.
+    Pre-Conditions:
+        :param from_platform: The platform the user is from.
+        :param from_platform_username: The "from" platform username of the user.
+    Post-Conditions:
+        Gather data from the database.
+    Return:
+        A message with the requested information or an error message.
+    """
+
+    config = {
+            'user': os.getenv("MYSQL_USER"),
+            'password': os.getenv("MYSQL_PASSWORD"),
+            'host': os.getenv("MYSQL_HOST"),
+            'database': os.getenv("MYSQL_DATABASE"),
+            'raise_on_warnings': True
+        }
+
+    # Simple injection sterilization
+    from_platform = from_platform.replace("--","").replace("/*","").replace("%00","").replace("%16","")
+    from_platform_username = from_platform_username.replace("--","").replace("/*","").replace("%00","").replace("%16","")
+
+    err_msg = f"""
+            There doesn't seem to be a MC username linked with this account,
+            please advise @{from_platform_username} to join the network before continuing.
+            """
+
+    account_data = {
+        "database": os.getenv("MYSQL_DATABASE"),
+        "from_platform": from_platform,
+        "from_platform_username": from_platform_username
+    }
+
+    try:
+        cnx = mysql.connector.connect(**config)
+        cursor = cnx.cursor()
+
+        mc_id_query = "SELECT player_id FROM linked_accounts WHERE " + from_platform + " = %(from_platform_username)s"
+        cursor.execute(mc_id_query, account_data)
+
+        data = cursor.fetchall()
+        if data != []:
+            account_data["player_id"] = str(data[0][0])
+        else:
+            cursor.close()
+            cnx.close()
+            return err_msg, 400
+
+        mc_name_uuid = "SELECT * FROM player_data WHERE player_id = %(player_id)s"
+        cursor.execute(mc_name_uuid, account_data)
+
+        data = cursor.fetchall()
+
+        cursor.close()
+        cnx.close()
+
+        return (data[0][2], data[0][1]), 200
 
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:

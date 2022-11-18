@@ -1,0 +1,3 @@
+code/.env
+*__pycache__
+*bas_discord_bot/
