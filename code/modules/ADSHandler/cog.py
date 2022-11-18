@@ -1,4 +1,11 @@
-#!/usr/bin/python3
+#!/bin/python3
+#--------------------------------------------------------------------
+# Module: ADS Handler
+# Purpose: Program built to integrate and handle AMP API integrations.
+# Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
+# Date: 18NOVEMBER2022
+# Updated: <date> <author>
+#--------------------------------------------------------------------
 
 from discord.ext import commands, tasks
 

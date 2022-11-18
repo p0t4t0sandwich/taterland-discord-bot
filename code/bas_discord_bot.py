@@ -1,12 +1,10 @@
 #!/bin/python3
 #--------------------------------------------------------------------
 # Project: BAS Network Discord Bot
-# Purpose: To link user accounts within a MySQL database.
+# Purpose: To add functionality and integrations for the BAS Discord.
 # Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
 # Date: 02AUGUST2022
-# Updated: 09NOVEMBER2022 p0t4t0sandwich
-#   - Rebuilt using Cogs.
-#   - Added AMP API modded server management.
+# Updated: 18NOVEMBER2022 p0t4t0sandwich
 #--------------------------------------------------------------------
 
 from discord.ext import commands

@@ -1,4 +1,11 @@
-#!/usr/bin/python3
+#!/bin/python3
+#--------------------------------------------------------------------
+# Module: Twitch Redeems
+# Purpose: Program built to integrate with Twitch and handle redeems.
+# Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
+# Date: 18NOVEMBER2022
+# Updated: <date> <author>
+#--------------------------------------------------------------------
 
 from discord import Embed
 from discord.ext import commands
@@ -7,7 +14,7 @@ import os
 
 import bot_library as b
 
-class Redeem(commands.Cog):
+class TwitchRedeems(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
@@ -85,4 +92,4 @@ class Redeem(commands.Cog):
             await ctx.reply(embed=embed)
 
 async def setup(bot: commands.bot) -> None:
-    await bot.add_cog(Redeem(bot))
+    await bot.add_cog(TwitchRedeems(bot))

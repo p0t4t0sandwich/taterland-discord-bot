@@ -1,4 +1,11 @@
-#!/usr/bin/python3
+#!/bin/python3
+#--------------------------------------------------------------------
+# Module: Account Link
+# Purpose: Allow users to link their various accounts.
+# Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
+# Date: 18NOVEMBER2022
+# Updated: <date> <author>
+#--------------------------------------------------------------------
 
 import discord
 from discord.ext import commands

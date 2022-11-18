@@ -1,4 +1,11 @@
-#!/usr/bin/python3
+#!/bin/python3
+#--------------------------------------------------------------------
+# Module: Modded Server Manager
+# Purpose: Program that manages the starting/status display of servers.
+# Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
+# Date: 18NOVEMBER2022
+# Updated: <date> <author>
+#--------------------------------------------------------------------
 
 from discord.ext import commands, tasks
 from mcstatus import JavaServer
@@ -9,9 +16,8 @@ import json
 import os
 
 import bot_library as b
-from ampapi_handler_async import AMPAPIHandlerAsync
 
-path = "./bas_discord_bot/"
+path = "/bas_discord_bot/"
 instance_addresses = {}
 
 

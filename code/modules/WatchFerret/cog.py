@@ -1,5 +1,16 @@
+#!/bin/python3
+#--------------------------------------------------------------------
+# Module: Watch Ferret
+# Purpose: Program to watch servers in the event of a stall on restart.
+# Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
+# Date: 18NOVEMBER2022
+# Updated: <date> <author>
+#--------------------------------------------------------------------
+
 from discord.ext import commands, tasks
 import bot_library as b
+
+# Name of program is now "watchferret", credit to sneakysnek#8707
 
 class WatchFerret(commands.Cog):
     def __init__(self, bot) -> None:

@@ -1,4 +1,11 @@
-#!/usr/bin/python3
+#!/bin/python3
+#--------------------------------------------------------------------
+# Module: Hot Reload
+# Purpose: Program built hot reload changes to Cogs.
+# Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
+# Date: 18NOVEMBER2022
+# Updated: <date> <author>
+#--------------------------------------------------------------------
 
 from discord.ext import commands
 
