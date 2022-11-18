@@ -13,3 +13,4 @@ requests==2.28.1
 typing_extensions==4.3.0
 urllib3==1.26.11
 yarl==1.8.1
+ampapi==1.0.6 
