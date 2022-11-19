@@ -37,7 +37,7 @@ class WatchFerret(commands.Cog):
                         status = result["State"]
                     else:
                         status = 0
-                        self.auth_instance(target_name, instance_name)
+                        await self.auth_instance(target_name, instance_name)
 
                     if status == 30:
                         self.status_dict[instance_name] += 1
