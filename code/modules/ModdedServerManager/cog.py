@@ -17,7 +17,7 @@ import os
 
 import bot_library as b
 
-path = "./bas_discord_bot/"
+path = "/bas_discord_bot/"
 instance_addresses = {}
 
 
