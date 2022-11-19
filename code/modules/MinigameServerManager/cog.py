@@ -182,7 +182,7 @@ class MinigameServerManager(commands.Cog, discord.ui.View):
             if "State" in result:
                 self.status_dict[instance_name] = result["State"]
             else:
-                self.auth_instance(instance_name)
+                await self.auth_instance(instance_name)
 
     # Function to get the current number of online minigame servers.
     def online_count(self) -> int:
