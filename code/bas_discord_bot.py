@@ -17,7 +17,7 @@ class BASBot(commands.Bot):
     def __init__(self) -> None:
         intents = discord.Intents.default()
         intents.message_content = True
-        self.path = "/bas_discord_bot/"
+        self.path = "./bas_discord_bot/"
         self.name = "bas_discord_bot"
         self.synced = True
 
@@ -48,16 +48,23 @@ class BASBot(commands.Bot):
         # On Ready Cog activities
         ADSHandler = self.get_cog("ADSHandler")
         await ADSHandler.initInstances()
+
         ModdedServerManager = self.get_cog("ModdedServerManager")
         ModdedServerManager.initModule()
         ModdedServerManager.update_status.start()
         ModdedServerManager.update_manager.start()
+
+        MinigameServerManager = self.get_cog("MinigameServerManager")
+        MinigameServerManager.initModule()
+        MinigameServerManager.update_status.start()
+        MinigameServerManager.update_manager.start()
+
         WatchFerret = self.get_cog("WatchFerret")
         WatchFerret.get_status.start()
 
 if __name__ == "__main__":
     bot = BASBot()
-    bot.run(token=os.getenv("BOT_ID"))
-    # from dotenv import load_dotenv
-    # load_dotenv()
     # bot.run(token=os.getenv("BOT_ID"))
+    from dotenv import load_dotenv
+    load_dotenv()
+    bot.run(token=os.getenv("BOT_ID"))
