@@ -37,12 +37,13 @@ class WatchFerret(commands.Cog):
                         status = result["State"]
                     else:
                         status = 0
-                        self.auth_instance(target_name, instance_name)
+                        await self.auth_instance(target_name, instance_name)
 
                     if status == 30:
                         self.status_dict[instance_name] += 1
 
-                    if self.status_dict[instance_name] >= 2:
+                    if self.status_dict[instance_name] >= 3:
+                        self.status_dict[instance_name] = 0
                         b.bot_logger(self.bot.path, self.bot.name, f"WatchFerret Event Detected: {instance_name}")
                         await self.bot.instances[target_name][instance_name].Core_KillAsync()
                         await self.bot.instances[target_name][instance_name].Core_StartAsync()

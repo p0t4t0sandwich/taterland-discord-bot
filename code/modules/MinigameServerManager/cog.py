@@ -1,6 +1,6 @@
 #!/bin/python3
 #--------------------------------------------------------------------
-# Module: Modded Server Manager
+# Module: Minigame Server Manager
 # Purpose: Program that manages the starting/status display of servers.
 # Author: Dylan Sperrer (p0t4t0sandwich|ThePotatoKing)
 # Date: 18NOVEMBER2022
@@ -81,7 +81,7 @@ async def status(address: str, instance_name: str) -> discord.Embed | discord.Fi
 
         # Logic to send the Java Server status
         if java_query != None:
-            title = f"Modded Server: {instance_name}"
+            title = f"Minigame Server: {instance_name}"
             description = f"""{re.sub('[§][a-z0-9]','',java_query.motd)}
             Players: {java_query.players.online}/{java_query.players.max}
             {java_query.software.brand}: {java_query.software.version}
@@ -91,7 +91,7 @@ async def status(address: str, instance_name: str) -> discord.Embed | discord.Fi
             color = 0x65bf65
 
         elif java_status != None:
-            title = f"Modded Server: {instance_name}"
+            title = f"Minigame Server: {instance_name}"
             description = f"""{re.sub('[§][a-z0-9]','',java_status.description)}
             Players: {java_status.players.online}/{java_status.players.max}
             Version: {java_status.version.name}
@@ -102,7 +102,7 @@ async def status(address: str, instance_name: str) -> discord.Embed | discord.Fi
 
         else:
             # Error response
-            title = f"Modded Server: {instance_name}"
+            title = f"Minigame Server: {instance_name}"
             description = f"Whoops, something went wrong,\ncouldn't reach {instance_name}.\t¯\\\\_(\"/)\_/¯"
             color = 0xbf0f0f
 
@@ -113,7 +113,7 @@ async def status(address: str, instance_name: str) -> discord.Embed | discord.Fi
         return (embed, file)
 
 async def save_message(channel_id, message_id) -> None:
-    filename = path + "/modded_embed_messages.json"
+    filename = path + "/minigame_embed_messages.json"
     if not os.path.exists(filename):
         with open(filename, "w") as f:
             f.write("{\"messages\":[" + f"{channel_id}-{message_id}" + "]}")
@@ -131,13 +131,13 @@ async def save_message(channel_id, message_id) -> None:
             json.dump(new_messages, outfile, indent = 4)
             outfile.close()
 
-class ModdedServerManager(commands.Cog, discord.ui.View):
+class MinigameServerManager(commands.Cog, discord.ui.View):
     def __init__(self, bot) -> None:
         discord.ui.View.__init__(self, timeout=None)
         self.bot = bot
         self.status_dict = {}
         self.inactive_dict = {}
-        self.host = "172.16.1.175"
+        self.host = "172.16.1.176"
 
     @discord.ui.button(label='Start', style=discord.ButtonStyle.green, custom_id='persistent_view:start')
     async def start(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
@@ -165,28 +165,28 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
 
     # Function to initialize instance data.
     def initModule(self) -> None:
-        for instance in self.bot.targets[2]["AvailableInstances"]:
+        for instance in self.bot.targets[3]["AvailableInstances"]:
             instance_name = instance["InstanceName"]
             instance_addresses[instance_name] = self.host + ":" + instance["ApplicationEndpoints"][0]["Endpoint"].split(":")[1]
             self.status_dict[instance_name] = 0
 
     # Function to authenticate and re-authenticate the instances.
     async def auth_instance(self, instance_name: str) -> None:
-        if self.bot.instances["AMP03"][instance_name]!= None:
+        if self.bot.instances["AMP04"][instance_name]!= None:
             b.bot_logger(self.bot.path, self.bot.name, f"Authenticated Instance: {instance_name}")
         else:
             b.bot_logger(self.bot.path, self.bot.name, f"Instance Offline: {instance_name}")
 
     # Function to check the status of the servers.
     async def status_check(self) -> None:
-        for instance_name in self.bot.instances["AMP03"].keys():
-            result = await self.bot.instances["AMP03"][instance_name].Core_GetStatusAsync()
+        for instance_name in self.bot.instances["AMP04"].keys():
+            result = await self.bot.instances["AMP04"][instance_name].Core_GetStatusAsync()
             if "State" in result:
                 self.status_dict[instance_name] = result["State"]
             else:
                 await self.auth_instance(instance_name)
 
-    # Function to get the current number of online modded servers.
+    # Function to get the current number of online minigame servers.
     def online_count(self) -> int:
         count = 0
         for i in self.status_dict.keys():
@@ -196,8 +196,8 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
 
     # Function to confirm the activation of a server.
     async def confirm_server_activation(self, instance_name: str) -> bool:
-        if self.online_count() < 2:
-            result = (await self.bot.instances["AMP03"][instance_name].Core_StartAsync())["result"]
+        if self.online_count() < 3:
+            result = (await self.bot.instances["AMP04"][instance_name].Core_StartAsync())["result"]
             if "Status" in result.keys() and result["Status"]:
                 b.bot_logger(self.bot.path, self.bot.name, f"Starting Server: {instance_name}")
                 return True
@@ -205,35 +205,34 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
             b.bot_logger(self.bot.path, self.bot.name, f"Instance Failed to Start: {instance_name}")
             return False
 
-    # Function to turn off servers after 15 min of inactivity.
+    # Function to turn off servers after 5 min of inactivity.
     async def shutdown_inactive_servers(self) -> None:
-        for instance_name in self.bot.instances["AMP03"].keys():
-            if instance_name not in ["Stoneblock301"]:
-                if instance_name not in self.inactive_dict.keys():
-                    self.inactive_dict[instance_name] = 0
+        for instance_name in self.bot.instances["AMP04"].keys():
+            if instance_name not in self.inactive_dict.keys():
+                self.inactive_dict[instance_name] = 0
 
-                java = await JavaServer.async_lookup(address=instance_addresses[instance_name], timeout=0.5)
-                try:
-                    players = (await java.async_status()).players.online
-                except:
-                    players = -1
+            java = await JavaServer.async_lookup(address=instance_addresses[instance_name], timeout=0.5)
+            try:
+                players = (await java.async_status()).players.online
+            except:
+                players = -1
 
-                if players == 0:
-                    self.inactive_dict[instance_name] += 1
+            if players == 0:
+                self.inactive_dict[instance_name] += 1
 
-                if self.inactive_dict[instance_name] >= 15:
-                    self.inactive_dict[instance_name] = 0
-                    await self.bot.instances["AMP03"][instance_name].Core_StopAsync()
-                    b.bot_logger(self.bot.path, self.bot.name, f"Stopping Server: {instance_name}")
+            if self.inactive_dict[instance_name] >= 5:
+                self.inactive_dict[instance_name] = 0
+                await self.bot.instances["AMP04"][instance_name].Core_StopAsync()
+                b.bot_logger(self.bot.path, self.bot.name, f"Stopping Server: {instance_name}")
 
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=1)
     async def update_status(self):
         await self.status_check()
         await self.shutdown_inactive_servers()
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=5)
     async def update_manager(self):
-        filename = path + "/modded_embed_messages.json"
+        filename = path + "/minigame_embed_messages.json"
         if not os.path.exists(filename):
             with open(filename, "w") as f:
                 f.write("{\"messages\":[]}")
@@ -264,7 +263,7 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
 
     @commands.command()
     @commands.is_owner()
-    async def manage_modded(self, ctx: commands.Context, instance_name) -> None:
+    async def manage_minigame(self, ctx: commands.Context, instance_name) -> None:
         """Creates an embed to check server status"""
         channel = ctx.guild.name
         author = ctx.author
@@ -283,4 +282,4 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
         await save_message(channel_id, message_id)
 
 async def setup(bot: commands.bot) -> None:
-    await bot.add_cog(ModdedServerManager(bot))
+    await bot.add_cog(MinigameServerManager(bot))

@@ -40,6 +40,9 @@ class BASBot(commands.Bot):
         await self.wait_until_ready()
         b.bot_logger(self.path, self.name, f"We have logged in as {self.user}")
         self.owner_id = (await self.application_info()).owner.id
+
+        # await self.load_extension(f"modules.Funny.cog")
+
         await self.load_extensions()
         if not self.synced:
             await self.tree.sync()
@@ -48,10 +51,17 @@ class BASBot(commands.Bot):
         # On Ready Cog activities
         ADSHandler = self.get_cog("ADSHandler")
         await ADSHandler.initInstances()
+
         ModdedServerManager = self.get_cog("ModdedServerManager")
         ModdedServerManager.initModule()
         ModdedServerManager.update_status.start()
         ModdedServerManager.update_manager.start()
+
+        MinigameServerManager = self.get_cog("MinigameServerManager")
+        MinigameServerManager.initModule()
+        MinigameServerManager.update_status.start()
+        MinigameServerManager.update_manager.start()
+
         WatchFerret = self.get_cog("WatchFerret")
         WatchFerret.get_status.start()
 
