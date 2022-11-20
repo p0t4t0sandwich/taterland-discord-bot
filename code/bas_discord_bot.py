@@ -40,6 +40,9 @@ class BASBot(commands.Bot):
         await self.wait_until_ready()
         b.bot_logger(self.path, self.name, f"We have logged in as {self.user}")
         self.owner_id = (await self.application_info()).owner.id
+
+        # await self.load_extension(f"modules.Funny.cog")
+
         await self.load_extensions()
         if not self.synced:
             await self.tree.sync()
