@@ -157,9 +157,11 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
     async def refresh(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         await interaction.response.send_message("Refreshed!", ephemeral=True)
         msg = interaction.message
-        instance_name = msg.embeds.pop().title.split("Server: ")[1]
+        old_embed = msg.embeds.pop()
+        instance_name = old_embed.title.split("Server: ")[1]
         (embed, file) = await status(instance_addresses[instance_name], instance_name)
-        await msg.edit(embed=embed, attachments=[file])
+        if not embed.description == old_embed.description:
+            await msg.edit(embed=embed, attachments=[file])
 
     # Function to initialize instance data.
     def initModule(self) -> None:
@@ -224,7 +226,7 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
                     await self.bot.instances["AMP03"][instance_name].Core_StopAsync()
                     b.bot_logger(self.bot.path, self.bot.name, f"Stopping Server: {instance_name}")
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=5)
     async def update_status(self):
         await self.status_check()
         await self.shutdown_inactive_servers()
@@ -249,7 +251,8 @@ class ModdedServerManager(commands.Cog, discord.ui.View):
                     ids = i.split("-")
                     channel = self.bot.get_channel(int(ids[0]))
                     message = await channel.fetch_message(int(ids[1]))
-                    instance_name = message.embeds.pop().title.split("Server: ")[1]
+                    old_embed = message.embeds.pop()
+                    instance_name = old_embed.title.split("Server: ")[1]
                     (embed, file) = await status(instance_addresses[instance_name], instance_name)
                     await message.edit(embed=embed, attachments=[file], view=self)
                 except:
