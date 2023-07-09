@@ -39,40 +39,40 @@ export class WebServer {
                 .send(`
                 <!DOCTYPE html>
                 <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Bee Name Generator</title>
-                    <style>
-                        body {
-                            font-family: Arial, Helvetica, sans-serif;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Bee Name Generator</h1>
-                    <a href="https://github.com/p0t4t0sandwich/bee-name-generator">GitHub Repository</a>
-                    <br>
-                    <p>Get a bee name: </p>
-                    <a href="${DOMAIN}${ROOT_ENDPOINT}/name">GET ${DOMAIN}${ROOT_ENDPOINT}/name</a>
-                    <br>
-                    <p>Upload a bee name (Authentication Required): </p>
-                    <a href="${DOMAIN}${ROOT_ENDPOINT}/name">POST ${DOMAIN}${ROOT_ENDPOINT}/name</a>
-                    <br>
-                    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-                    <p>Submit a bee name (it can make sense, or you can be punny with it): </p>
-                    <form action="${DOMAIN}${ROOT_ENDPOINT}/suggestion" method="post" target="dummyframe">
-                        <input type="text" name="name" placeholder="Bee Name">
-                        <input type="submit" value="Submit">
-                    </form>
-                    <p>Get bee name suggestions (Authentication Required): </p>
-                    <a href="${DOMAIN}${ROOT_ENDPOINT}/suggestion">GET ${DOMAIN}${ROOT_ENDPOINT}/suggestion</a>
-                    <br>
-                    <p>Accept a bee name suggestion (Authentication Required): </p>
-                    <a href="${DOMAIN}${ROOT_ENDPOINT}/suggestion">PUT ${DOMAIN}${ROOT_ENDPOINT}/suggestion</a>
-                    <br>
-                    <p>Reject a bee name suggestion (Authentication Required): </p>
-                    <a href="${DOMAIN}${ROOT_ENDPOINT}/suggestion">DELETE ${DOMAIN}${ROOT_ENDPOINT}/suggestion</a>
-                </body>
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Bee Name Generator</title>
+                        <style>
+                            body {
+                                font-family: Arial, Helvetica, sans-serif;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Bee Name Generator</h1>
+                        <a href="https://github.com/p0t4t0sandwich/bee-name-generator">GitHub Repository</a>
+                        <br>
+                        <p>Get a bee name: </p>
+                        <a href="${DOMAIN}${ROOT_ENDPOINT}/name">GET ${DOMAIN}${ROOT_ENDPOINT}/name</a>
+                        <br>
+                        <p>Upload a bee name (Authentication Required): </p>
+                        <a href="${DOMAIN}${ROOT_ENDPOINT}/name">POST ${DOMAIN}${ROOT_ENDPOINT}/name</a>
+                        <br>
+                        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+                        <p>Submit a bee name (it can make sense, or you can be punny with it): </p>
+                        <form action="${DOMAIN}${ROOT_ENDPOINT}/suggestion" method="post" target="dummyframe">
+                            <input type="text" name="name" placeholder="Bee Name">
+                            <input type="submit" value="Submit">
+                        </form>
+                        <p>Get bee name suggestions (Authentication Required): </p>
+                        <a href="${DOMAIN}${ROOT_ENDPOINT}/suggestion">GET ${DOMAIN}${ROOT_ENDPOINT}/suggestion</a>
+                        <br>
+                        <p>Accept a bee name suggestion (Authentication Required): </p>
+                        <a href="${DOMAIN}${ROOT_ENDPOINT}/suggestion">PUT ${DOMAIN}${ROOT_ENDPOINT}/suggestion</a>
+                        <br>
+                        <p>Reject a bee name suggestion (Authentication Required): </p>
+                        <a href="${DOMAIN}${ROOT_ENDPOINT}/suggestion">DELETE ${DOMAIN}${ROOT_ENDPOINT}/suggestion</a>
+                    </body>
                 </html>
                 `);
 

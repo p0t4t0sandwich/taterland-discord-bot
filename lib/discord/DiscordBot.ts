@@ -5,6 +5,8 @@
 
 import { CacheType, ChatInputCommandInteraction, Client, Collection, Events, GatewayIntentBits, Interaction, REST, Routes } from 'discord.js';
 
+import { Logger } from '../utils/Logger.js';
+
 // Import commands
 import { command as funnyCommand } from './modules/funny/commands/funny.js';
 
@@ -30,6 +32,7 @@ interface CustomClient extends Client {
 class DiscordBot {
     private token: string;
     private clientId: string;
+    private logger: Logger = new Logger('DiscordBot', 'discord');
 
     /**
      * @constructor
@@ -72,7 +75,7 @@ class DiscordBot {
 
         // If the command doesn't exist, return
         if (!command) {
-            console.error(`No command matching ${interaction.commandName} was found.`);
+            this.logger.log("Error", this.clientId, `No command matching ${interaction.commandName} was found.`);
             return;
         }
 
@@ -80,7 +83,7 @@ class DiscordBot {
         try {
             await command.execute(interaction);
         } catch (error) {
-            console.error(error);
+            this.logger.log("Error", this.clientId, error);
             await interaction.editReply({ content: 'There was an error while executing this command!' });
         }
     }
@@ -112,13 +115,13 @@ class DiscordBot {
 
             (async () => {
                 try {
-                    console.log(`Started refreshing ${commands.length} application (/) commands.`);
+                    this.logger.log("Info", this.clientId, `Started refreshing ${commands.length} application (/) commands.`);
                     const data = <any[]>(await rest.put(
                         Routes.applicationCommands(this.clientId),
                         { body: commands },
                     ));
 
-                    console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+                    this.logger.log("Info", this.clientId, `Successfully reloaded ${data.length} application (/) commands.`);
 
                 } catch (error) {
                     console.error(error);
@@ -148,3 +151,5 @@ class DiscordBot {
         client.login(this.token);
     }
 }
+
+export { DiscordBot };

@@ -1,9 +1,9 @@
 ---
 version: "3.8"
 services:
-  bee-name-generator:
-    image: p0t4t0sandwich/bee-name-generator:latest
-    container_name: bee-name-generator
+  taterland-discord-bot:
+    image: p0t4t0sandwich/taterland-discord-bot:latest
+    container_name: taterland-discord-bot
     environment:
       - TZ=UTC
       - DISCORD_TOKEN=           # Discord bot token
