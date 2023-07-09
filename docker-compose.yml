@@ -1,18 +1,20 @@
 ---
 version: "3.8"
 services:
-  bas_discord_bot:
-    image: p0t4t0sandwich/bas_discord_bot:latest
-    container_name: bas_discord_bot
+  bee-name-generator:
+    image: p0t4t0sandwich/bee-name-generator:latest
+    container_name: bee-name-generator
     environment:
       - TZ=UTC
-      - BOT_ID=                             # The ID of the Discord bot
-      - MYSQL_USER=                         # MySQL User
-      - MYSQL_PASSWORD=                     # MySQL Password
-      - MYSQL_HOST=                         # MySQL Host
-      - MYSQL_DATABASE=                     # MySQL Database
-      - TWITCH_CLIENT_ID=                   # Twitch Client ID
-      - TWITCH_CLIENT_SECRET=               # Twitch Client Secret
-    volumes:
-      - /PATH-TO-FOLDER:/bas_discord_bot    # Path to the file storage of the bot.
+      - DISCORD_TOKEN=           # Discord bot token
+      - DISCORD_CLIENT_ID=       # Used to update slash commands
+      - DISCORD_ADMIN_IDS=       # Comma separated list of admin ids
+      - REST_PORT=               # Port to listen on
+      - MONGODB_URI=             # MongoDB connection string
+      - MONGODB_DB=              # MongoDB database name
+      - DOMAIN=                  # Domain name for the REST API
+      - ROOT_ENDPOINT=           # Root endpoint for the REST API
+      - AUTH_TOKEN=              # Auth token for the REST API
+    ports:
+      - "0.0.0.0:3002:3002"
     restart: unless-stopped

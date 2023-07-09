@@ -1,8 +1,27 @@
-FROM python:3.10-alpine
-COPY ./requirements.txt /app/requirements.txt
+FROM node:19
+
 WORKDIR /app
-RUN pip install -r requirements.txt && mkdir /bas_discord_bot
-COPY ./code /app
-ENV BOT_ID="" MYSQL_USER="" MYSQL_PASSWORD="" MYSQL_HOST="" MYSQL_DATABASE="" TWITCH_CLIENT_ID="" TWITCH_CLIENT_SECRET="" AMP_API_USER="" AMP_API_PASSWORD=""
-ENTRYPOINT [ "python" ]
-CMD [ "bas_discord_bot.py" ]
+
+COPY LICENSE ./
+
+COPY tsconfig.json ./
+
+COPY tsconfig.build.json ./
+
+COPY package.json ./
+
+COPY package-lock.json ./
+
+RUN npm ci
+
+COPY README.md ./
+
+COPY ./locales ./locales
+
+COPY ./lib ./lib
+
+COPY index.ts ./
+
+RUN /app/node_modules/typescript/bin/tsc -p /app/tsconfig.build.json
+
+CMD ["node", "./dist/index.js"]
