@@ -1,3 +1,7 @@
-code/.env
-*__pycache__
-*bas_discord_bot/
+node_modules
+Dockerfile
+.env
+.gitignore
+.dockerignore
+docker-compose.yml
+.github
