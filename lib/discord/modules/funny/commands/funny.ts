@@ -11,8 +11,8 @@ import { Logger } from '../../../../utils/Logger.js';
 // Import locales
 import funnyCommandLocales from '../../../../../locales/commands/funny.json' assert { type: "json" };
 
-const logger = new Logger('funnyCommand', 'discord');
-const clientId = process.env.DISCORD_CLIENT_ID;
+const logger: Logger = new Logger('funnyCommand', 'discord');
+const clientId: string = process.env.DISCORD_CLIENT_ID;
 
 const command = {
     data: new SlashCommandBuilder()
@@ -39,7 +39,8 @@ const command = {
                 .setNameLocalizations(funnyCommandLocales.funny.meow_fact.name)
                 .setDescription('Get a random meow fact')
                 .setDescriptionLocalizations(funnyCommandLocales.funny.meow_fact.description)
-        ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
+        )
+        .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName('useless_fact')
                 .setNameLocalizations(funnyCommandLocales.funny.useless_fact.name)
                 .setDescription('Get a random useless fact')
