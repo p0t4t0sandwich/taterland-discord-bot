@@ -1,0 +1,5 @@
+[submodule "ampapi-typescript"]
+	active = true
+	# path = lib/discord/modules/serverUtils/utils/ampapi-typescript
+	path = ampapi-typescript
+	url = git@github.com:p0t4t0sandwich/ampapi-typescript.git

@@ -4,11 +4,6 @@
  */
 
 import { UUID } from "crypto";
-import { ADS } from "./ampapi/modules/ADS.js";
-import { CommonAPI } from "./ampapi/modules/CommonAPI.js";
-import { IADSInstance } from "./ampapi/types/IADSInstance.js";
-import { Instance } from "./ampapi/types/Instance.js";
-import { ActionResult } from "./ampapi/types/ActionResult.js";
 
 interface InstanceData<T,R extends CommonAPI> {
     data: T;
