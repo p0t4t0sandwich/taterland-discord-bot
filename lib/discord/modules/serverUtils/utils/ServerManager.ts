@@ -4,6 +4,12 @@
  */
 
 import { UUID } from "crypto";
+import { CommonAPI } from "./ampapi-typescript/lib/modules/CommonAPI.js";
+import { ADS } from "./ampapi-typescript/lib/modules/ADS.js";
+import { IADSInstance } from "./ampapi-typescript/lib/types/IADSInstance.js";
+import { Instance } from "./ampapi-typescript/lib/types/Instance.js";
+import { ActionResult } from "./ampapi-typescript/lib/types/ActionResult.js";
+import { Status } from "./ampapi-typescript/lib/types/Status.js";
 
 interface InstanceData<T,R extends CommonAPI> {
     data: T;
@@ -118,6 +124,15 @@ class ServerManager {
     }
 
     /**
+     * @method listServers
+     * @description Lists all servers
+     * @returns {Promise<string[]>} The result of the action
+     */
+    async listServers(): Promise<string[]> {
+        return Object.keys(this.instanceData);
+    }
+
+    /**
      * @method startServer
      * @description Starts a server
      * @param {string} instanceName The name of the instance to start
@@ -172,6 +187,62 @@ class ServerManager {
     async sendConsoleMessageToServer(instanceName: string, message: string): Promise<void> {
         return await (await this.getIntanceAPI(instanceName)).Core.SendConsoleMessage(message);
     }
+
+    /**
+     * @method getServerStatus
+     * @description Gets the status of a server
+     * @param {string} instanceName The name of the instance to get the status of
+     * @returns {Promise<Status>} The status of the server
+     */
+    async getServerStatus(instanceName: string): Promise<Status> {
+        return await (await this.getIntanceAPI(instanceName)).Core.GetStatus();
+    }
+
+    /**
+     * @method backupServer
+     * @description Backups a server
+     * @param {string} instanceName The name of the instance to backup
+     * @returns {Promise<ActionResult<any>>} The result of the action
+     */
+    async backupServer(instanceName: string, backupTitle: string, backupDescription: string, isSticky: boolean): Promise<ActionResult<any>> {
+        return await (await this.getIntanceAPI(instanceName)).LocalFileBackupPlugin.TakeBackup(backupTitle, backupDescription, isSticky);
+    }
+
+    /**
+     * @method parsePlayerList
+     * @description Parses the player list of a server
+     * @param {{ [key: string]: string }} playerList The player list to parse
+     * @returns {Promise<string[]>} The parsed player list
+     */
+    async parsePlayerList(playerList: { [key: string]: string }): Promise<string[]> {
+        return Object.keys(playerList);
+    }
+
+    /**
+     * @method getPlayerList
+     * @description Gets the player list of a server
+     * @param {string} instanceName The name of the instance to get the player list of
+     * @returns {Promise<{ [key: string]: string }>} The player list of the server
+     */
+    async getPlayerList(instanceName: string): Promise<{ [key: string]: string }> {
+        return (await (await this.getIntanceAPI(instanceName)).Core.GetUserList()).result
+    }
+
+    /**
+     * @method findPlayer
+     * @description Finds the server of a player
+     * @param {string} playerName The name of the player to find
+     * @returns {Promise<string>} The name of the server the player is on
+     */
+    async findPlayer(playerName: string): Promise<string> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            const playerList: { [key: string]: string } = await this.getPlayerList(instanceName);
+            if (Object.keys(playerList).includes(playerName)) return instanceName;
+        }
+    }
 }
 
-export { ServerManager };
+// Export the server manager
+const serverManager = new ServerManager();
+
+export { ServerManager, serverManager }

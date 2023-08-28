@@ -9,6 +9,9 @@ import { Logger } from '../../../../utils/Logger.js';
 
 // Import locales
 import serverCommandLocales from '../../../../../locales/commands/server.json' assert { type: "json" };
+import { serverManager } from '../utils/ServerManager.js';
+import { ActionResult } from '../utils/ampapi-typescript/lib/types/ActionResult.js';
+import { Status } from '../utils/ampapi-typescript/lib/types/Status.js';
 
 const logger: Logger = new Logger('serverCommand', 'discord');
 const clientId: string = process.env.DISCORD_CLIENT_ID;
@@ -170,39 +173,128 @@ const command = {
 
         // Handle subcommands
         switch (subcommand) {
+
+            // List servers
             case 'list':
-                embed.description = "Not implemented yet.";
+                const servers: string[] = await serverManager.listServers();
+                embed.description = "Avalable Servers: " + servers.join(", ");
                 break;
-            case 'start':
-                embed.description = "Not implemented yet.";
+
+            // Start a server
+            case 'start': {
+                const serverName: string = interaction.options.getString("server_name");
+                const result: ActionResult<any> = await serverManager.startServer(serverName);
+                if (result.Status === true) {
+                    embed.description = "Started server " + serverName + ".";
+                } else {
+                    embed.description = "Failed to start server " + serverName + ".\n" + result.Reason;
+                }
                 break;
-            case 'stop':
-                embed.description = "Not implemented yet.";
+            }
+
+            // Stop a server
+            case 'stop': {
+                const serverName: string = interaction.options.getString("server_name");
+                await serverManager.stopServer(serverName);
+                embed.description = "Stopped server " + serverName + ".";
                 break;
-            case 'restart':
-                embed.description = "Not implemented yet.";
+            }
+
+            // Restart a server
+            case 'restart': {
+                const serverName: string = interaction.options.getString("server_name");
+                const result: ActionResult<any> = await serverManager.restartServer(serverName);
+                if (result.Status === true) {
+                    embed.description = "Restarted server " + serverName + ".";
+                } else {
+                    embed.description = "Failed to restart server " + serverName + ".\n" + result.Reason;
+                }
                 break;
-            case 'kill':
-                embed.description = "Not implemented yet.";
+            }
+
+            // Kill a server
+            case 'kill': {
+                const serverName: string = interaction.options.getString("server_name");
+                await serverManager.killServer(serverName);
+                embed.description = "Killed server " + serverName + ".";
                 break;
-            case 'sleep':
-                embed.description = "Not implemented yet.";
+            }
+
+            // Put a server to sleep
+            case 'sleep': {
+                const serverName: string = interaction.options.getString("server_name");
+                const result: ActionResult<any> = await serverManager.sleepServer(serverName);
+                if (result.Status === true) {
+                    embed.description = "Put server " + serverName + " to sleep.";
+                } else {
+                    embed.description = "Failed to put server " + serverName + " to sleep.\n" + result.Reason;
+                }
                 break;
-            case 'send':
-                embed.description = "Not implemented yet.";
+            }
+
+            // Send a command to a server
+            case 'send': {
+                const serverName: string = interaction.options.getString("server_name");
+                const command: string = interaction.options.getString("command");
+                await serverManager.sendConsoleMessageToServer(serverName, command);
+                embed.description = "Sent command to server " + serverName + ".";
                 break;
+            }
+
+            // Get the status of a server
             case 'status':
-                embed.description = "Not implemented yet.";
+                const serverName: string = interaction.options.getString("server_name");
+                const status: Status = await serverManager.getServerStatus(serverName);
+
+                // Build embed
+                embed.description = `Server: ${serverName}\n`
+                    + `Status: ${status.State}\n`;
+                    + `CPU Usage: ${status.Metrics["CPU Usage"]}\n`
+                    + `Memory Usage: ${status.Metrics["Memory Usage"]}\n`
+                    + `Online Players: ${status.Metrics["Active Users"]}\n`
+
+                // Add optional metrics
+                if (status.Metrics.hasOwnProperty("TPS")) {
+                    embed.description += `TPS: ${status.Metrics["TPS"]}\n`;
+                }
                 break;
-            case 'backup':
-                embed.description = "Not implemented yet.";
+
+            // Backup a server
+            case 'backup': {
+                const serverName: string = interaction.options.getString("server_name");
+
+                // TODO: Add backup name, description, and sticky options
+                const result: ActionResult<any> = await serverManager.backupServer(serverName, "", "", false);
+                if (result.Status === true) {
+                    embed.description = "Backed up server " + serverName + ".";
+                } else {
+                    embed.description = "Failed to backup server " + serverName + ".\n" + result.Reason;
+                }
                 break;
-            case 'players':
-                embed.description = "Not implemented yet.";
+            }
+
+            // Get the players of a server
+            case 'players':{
+                const serverName: string = interaction.options.getString("server_name");
+                const players: string[] = await serverManager.parsePlayerList(
+                    await serverManager.getPlayerList(serverName)
+                );
+                embed.description = "Players on server " + serverName + ":\n" + players.join(", ");
                 break;
-            case 'find':
-                embed.description = "Not implemented yet.";
+            }
+
+            // Find the server that a player is on
+            case 'find':{
+                const playerName: string = interaction.options.getString("player_name");
+                const server: string = await serverManager.findPlayer(playerName);
+                if (server) {
+                    embed.description = "Player " + playerName + " is on server " + server + ".";
+                } else {
+                    embed.description = "Could not find player " + playerName + ".";
+                }
                 break;
+            }
+
             default:
                 embed.description = "Unknown subcommand.";
                 break;
