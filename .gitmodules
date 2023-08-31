@@ -1,7 +1,7 @@
-[submodule "ampapi-typescript"]
-	active = true
-	path = lib/discord/modules/serverUtils/utils/ampapi-typescript
-	url = git@github.com:p0t4t0sandwich/ampapi-typescript.git
+# [submodule "ampapi-typescript"]
+# 	active = true
+# 	path = lib/discord/modules/serverUtils/utils/ampapi-typescript
+# 	url = git@github.com:p0t4t0sandwich/ampapi-typescript.git
 
 # eval "$(ssh-agent -s)"
 # ssh-add ~/.ssh/id_github
