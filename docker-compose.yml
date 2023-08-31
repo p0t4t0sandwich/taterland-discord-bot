@@ -9,6 +9,9 @@ services:
       - DISCORD_TOKEN=           # Discord bot token
       - DISCORD_CLIENT_ID=       # Used to update slash commands
       - DISCORD_ADMIN_IDS=       # Comma separated list of admin ids
+      - AMP_URL=                 # URL of the AMP server
+      - AMP_USERNAME=            # Username for the AMP server
+      - AMP_PASSWORD=            # Password for the AMP server
       - REST_PORT=               # Port to listen on
       - MONGODB_URI=             # MongoDB connection string
       - MONGODB_DB=              # MongoDB database name

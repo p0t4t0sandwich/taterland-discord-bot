@@ -1,9 +1,14 @@
 /**
  * @author p0t4t0sandwich
  * @description Server management Discord commands
+ * 
+ * Colors:
+ * - Green: 0x65bf65
+ * - Yellow: 0xe6d132
+ * - Red: 0xbf0f0f
  */
 
-import { SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder } from 'discord.js';
+import { SlashCommandBooleanOption, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder } from 'discord.js';
 
 import { Logger } from '../../../../utils/Logger.js';
 
@@ -12,9 +17,11 @@ import serverCommandLocales from '../../../../../locales/commands/server.json' a
 import { serverManager } from '../utils/ServerManager.js';
 import { ActionResult } from '../utils/ampapi-typescript/lib/types/ActionResult.js';
 import { Status } from '../utils/ampapi-typescript/lib/types/Status.js';
+import { lookupState } from '../utils/ampapi-typescript/lib/types/State.js';
 
 const logger: Logger = new Logger('serverCommand', 'discord');
 const clientId: string = process.env.DISCORD_CLIENT_ID;
+const DISCORD_ADMIN_IDS: string[] = process.env.DISCORD_ADMIN_IDS.split(",");
 
 const command = {
     data: new SlashCommandBuilder()
@@ -130,6 +137,24 @@ const command = {
                         .setDescription("Name of the server")
                         .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
                         .setRequired(true)
+                ).addStringOption((option: SlashCommandStringOption) =>
+                    option.setName("backup_name")
+                        .setNameLocalizations(serverCommandLocales.server.backup.variable.backup_name.name)
+                        .setDescription("Name of the backup")
+                        .setDescriptionLocalizations(serverCommandLocales.server.backup.variable.backup_name.description)
+                        .setRequired(false)
+                ).addStringOption((option: SlashCommandStringOption) =>
+                    option.setName("description")
+                        .setNameLocalizations(serverCommandLocales.server.backup.variable.description.name)
+                        .setDescription("Description of the backup")
+                        .setDescriptionLocalizations(serverCommandLocales.server.backup.variable.description.description)
+                        .setRequired(false)
+                ).addBooleanOption((option: SlashCommandBooleanOption) =>
+                    option.setName("is_sticky")
+                        .setNameLocalizations(serverCommandLocales.server.backup.variable.is_sticky.name)
+                        .setDescription("Whether or not the backup is sticky")
+                        .setDescriptionLocalizations(serverCommandLocales.server.backup.variable.is_sticky.description)
+                        .setRequired(false)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("players")
@@ -168,8 +193,16 @@ const command = {
         const embed = {
             color: 0xbf0f0f,
             title: "Server command",
-            description: "An unknown error occurred."
+            description: "An unknown error occurred.",
+            fields: []
         };
+
+        if (!DISCORD_ADMIN_IDS.includes(discordID)) {
+            embed.title = "Permission denied";
+            embed.description = "You do not have permission to use this command.";
+            await interaction.editReply({ embeds: [embed] });
+            return;
+        }
 
         // Handle subcommands
         switch (subcommand) {
@@ -177,15 +210,19 @@ const command = {
             // List servers
             case 'list':
                 const servers: string[] = await serverManager.listServers();
-                embed.description = "Avalable Servers: " + servers.join(", ");
+                embed.title = "Available Servers";
+                embed.description = servers.join(", ");
+                embed.color = 0x65bf65;
                 break;
 
             // Start a server
             case 'start': {
                 const serverName: string = interaction.options.getString("server_name");
                 const result: ActionResult<any> = await serverManager.startServer(serverName);
+                embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Started server " + serverName + ".";
+                    embed.color = 0x65bf65;
                 } else {
                     embed.description = "Failed to start server " + serverName + ".\n" + result.Reason;
                 }
@@ -196,7 +233,9 @@ const command = {
             case 'stop': {
                 const serverName: string = interaction.options.getString("server_name");
                 await serverManager.stopServer(serverName);
+                embed.title = serverName;
                 embed.description = "Stopped server " + serverName + ".";
+                embed.color = 0x65bf65;
                 break;
             }
 
@@ -204,8 +243,10 @@ const command = {
             case 'restart': {
                 const serverName: string = interaction.options.getString("server_name");
                 const result: ActionResult<any> = await serverManager.restartServer(serverName);
+                embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Restarted server " + serverName + ".";
+                    embed.color = 0x65bf65;
                 } else {
                     embed.description = "Failed to restart server " + serverName + ".\n" + result.Reason;
                 }
@@ -216,7 +257,9 @@ const command = {
             case 'kill': {
                 const serverName: string = interaction.options.getString("server_name");
                 await serverManager.killServer(serverName);
+                embed.title = serverName;
                 embed.description = "Killed server " + serverName + ".";
+                embed.color = 0x65bf65;
                 break;
             }
 
@@ -224,8 +267,10 @@ const command = {
             case 'sleep': {
                 const serverName: string = interaction.options.getString("server_name");
                 const result: ActionResult<any> = await serverManager.sleepServer(serverName);
+                embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Put server " + serverName + " to sleep.";
+                    embed.color = 0x65bf65;
                 } else {
                     embed.description = "Failed to put server " + serverName + " to sleep.\n" + result.Reason;
                 }
@@ -237,7 +282,9 @@ const command = {
                 const serverName: string = interaction.options.getString("server_name");
                 const command: string = interaction.options.getString("command");
                 await serverManager.sendConsoleMessageToServer(serverName, command);
+                embed.title = serverName;
                 embed.description = "Sent command to server " + serverName + ".";
+                embed.color = 0x65bf65;
                 break;
             }
 
@@ -246,27 +293,75 @@ const command = {
                 const serverName: string = interaction.options.getString("server_name");
                 const status: Status = await serverManager.getServerStatus(serverName);
 
-                // Build embed
-                embed.description = `Server: ${serverName}\n`
-                    + `Status: ${status.State}\n`;
-                    + `CPU Usage: ${status.Metrics["CPU Usage"]}\n`
-                    + `Memory Usage: ${status.Metrics["Memory Usage"]}\n`
-                    + `Online Players: ${status.Metrics["Active Users"]}\n`
+                let state: string = lookupState(status.State);
+
+                embed.title = serverName;
+                // embed.description = "Status of server " + serverName + ":";
+                embed.description = "";
+                embed.fields = [
+                    {
+                        name: "Status",
+                        value: state
+                    },
+                    {
+                        name: "CPU",
+                        value: `${status.Metrics["CPU Usage"].RawValue}${status.Metrics["CPU Usage"].Units}`,
+                        inline: true
+                    },
+                    {
+                        name: "RAM",
+                        value: `${status.Metrics["Memory Usage"].RawValue}${status.Metrics["Memory Usage"].Units}`,
+                        inline: true
+                    },
+                    {
+                        name: "",
+                        value: ""
+                    },
+                    {
+                        name: "Players",
+                        value: status.Metrics["Active Users"].RawValue,
+                        inline: true
+                    }
+                ];
 
                 // Add optional metrics
                 if (status.Metrics.hasOwnProperty("TPS")) {
-                    embed.description += `TPS: ${status.Metrics["TPS"]}\n`;
+                    embed.fields.push({
+                        name: "TPS",
+                        value: status.Metrics["TPS"].RawValue,
+                        inline: true
+                    });
                 }
+
+                switch (state) {
+                    case 'Ready':
+                        embed.color = 0x65bf65;
+                        break;
+                    case 'Sleeping':
+                        embed.color = 0xe6d132;
+                        break;
+                    case 'Failed':
+                        embed.color = 0xbf0f0f;
+                        break;
+                    default:
+                        embed.color = 0xbf0f0f;
+                        break;
+                }
+
                 break;
 
             // Backup a server
             case 'backup': {
                 const serverName: string = interaction.options.getString("server_name");
+                const backupName: string = interaction.options.getString("backup_name");
+                const description: string = interaction.options.getString("description");
+                const isSticky: boolean = interaction.options.getBoolean("is_sticky");
 
-                // TODO: Add backup name, description, and sticky options
-                const result: ActionResult<any> = await serverManager.backupServer(serverName, "", "", false);
+                const result: ActionResult<any> = await serverManager.backupServer(serverName, backupName, description, isSticky);
+                embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Backed up server " + serverName + ".";
+                    embed.color = 0x65bf65;
                 } else {
                     embed.description = "Failed to backup server " + serverName + ".\n" + result.Reason;
                 }
@@ -279,6 +374,7 @@ const command = {
                 const players: string[] = await serverManager.parsePlayerList(
                     await serverManager.getPlayerList(serverName)
                 );
+                embed.title = serverName;
                 embed.description = "Players on server " + serverName + ":\n" + players.join(", ");
                 break;
             }
@@ -287,10 +383,13 @@ const command = {
             case 'find':{
                 const playerName: string = interaction.options.getString("player_name");
                 const server: string = await serverManager.findPlayer(playerName);
+                embed.title = "Finding player " + playerName;
                 if (server) {
                     embed.description = "Player " + playerName + " is on server " + server + ".";
+                    embed.color = 0x65bf65;
                 } else {
                     embed.description = "Could not find player " + playerName + ".";
+                    embed.color = 0xe6d132;
                 }
                 break;
             }

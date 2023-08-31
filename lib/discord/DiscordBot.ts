@@ -9,6 +9,7 @@ import { Logger } from '../utils/Logger.js';
 
 // Import commands
 import { command as funnyCommand } from './modules/funny/commands/funny.js';
+import { command as serverCommand } from './modules/serverUtils/commands/server.js';
 
 /**
  * @interface CustomClient
@@ -83,7 +84,8 @@ class DiscordBot {
         try {
             await command.execute(interaction);
         } catch (error) {
-            this.logger.log("Error", this.clientId, error);
+            this.logger.log("Error", this.clientId, error.toString());
+            console.log(error);
             await interaction.editReply({ content: 'There was an error while executing this command!' });
         }
     }
@@ -101,7 +103,8 @@ class DiscordBot {
             client.commands = new Collection();
 
             const rawCommands = [
-                funnyCommand
+                funnyCommand,
+                serverCommand
             ];
 
             for (const rawCommand of rawCommands) {
@@ -111,7 +114,7 @@ class DiscordBot {
 
             const rest = new REST({ version: '10' }).setToken(this.token);
 
-            console.log(`Ready! Logged in as ${client.user.tag}`);
+            this.logger.log("Info", this.clientId, `Ready! Logged in as ${client.user.tag}`);
 
             (async () => {
                 try {

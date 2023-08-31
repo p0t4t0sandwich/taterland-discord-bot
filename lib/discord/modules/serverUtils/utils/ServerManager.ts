@@ -244,5 +244,6 @@ class ServerManager {
 
 // Export the server manager
 const serverManager = new ServerManager();
+await serverManager.initInstanceData();
 
 export { ServerManager, serverManager }
