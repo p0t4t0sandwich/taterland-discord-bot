@@ -15,9 +15,7 @@ import { Logger } from '../../../../utils/Logger.js';
 // Import locales
 import serverCommandLocales from '../../../../../locales/commands/server.json' assert { type: "json" };
 import { serverManager } from '../utils/ServerManager.js';
-import { ActionResult } from '../utils/ampapi-typescript/lib/types/ActionResult.js';
-import { Status } from '../utils/ampapi-typescript/lib/types/Status.js';
-import { lookupState } from '../utils/ampapi-typescript/lib/types/State.js';
+import { ActionResult, Status, lookupState } from '@neuralnexus/ampapi';
 
 const logger: Logger = new Logger('serverCommand', 'discord');
 const clientId: string = process.env.DISCORD_CLIENT_ID;

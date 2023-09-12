@@ -3,13 +3,7 @@
  * @description Game server manager utility class
  */
 
-import { UUID } from "crypto";
-import { CommonAPI } from "./ampapi-typescript/lib/modules/CommonAPI.js";
-import { ADS } from "./ampapi-typescript/lib/modules/ADS.js";
-import { IADSInstance } from "./ampapi-typescript/lib/types/IADSInstance.js";
-import { Instance } from "./ampapi-typescript/lib/types/Instance.js";
-import { ActionResult } from "./ampapi-typescript/lib/types/ActionResult.js";
-import { Status } from "./ampapi-typescript/lib/types/Status.js";
+import { ADS, ActionResult, CommonAPI, IADSInstance, Instance, Status, UUID } from "@neuralnexus/ampapi";
 
 interface InstanceData<T,R extends CommonAPI> {
     data: T;
@@ -29,8 +23,8 @@ class ServerManager {
         process.env.AMP_API_USERNAME,
         process.env.AMP_API_PASSWORD
     );
-    private targetData: { [key: UUID]: InstanceData<IADSInstance, ADS> } = {};
-    private instanceData: { [key: UUID]: InstanceData<Instance, CommonAPI> } = {};
+    private targetData: { [key: string]: InstanceData<IADSInstance, ADS> } = {};
+    private instanceData: { [key: string]: InstanceData<Instance, CommonAPI> } = {};
 
     async initInstanceData(): Promise<void> {
         await this.controller.APILogin();
@@ -69,7 +63,7 @@ class ServerManager {
 
         // Get the target API
         const targetAPI = this.controller.InstanceLogin<ADS>(
-            targetData.target.InstanceId, "ADS"
+            targetData.data.InstanceId, "ADS"
         );
 
         // Store the target API
