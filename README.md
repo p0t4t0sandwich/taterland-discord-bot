@@ -15,3 +15,7 @@ Discord bot for the Taterland Discord server.
 | `/funny meow_fact`    | Get a meow fact    | None       | false      |
 | `/funny useless_fact` | Get a useless fact | None       | false      |
 | `/playtime`           | Get playtime       | None       | false      |
+
+## TODO
+
+- Add error response for invalid server name
