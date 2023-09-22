@@ -3,7 +3,7 @@
  * @description Game server manager utility class
  */
 
-import { ADS, ActionResult, CommonAPI, IADSInstance, Instance, Status, UUID } from "@neuralnexus/ampapi";
+import { ADS, ActionResult, CommonAPI, IADSInstance, Instance, Status } from "@neuralnexus/ampapi";
 
 interface InstanceData<T,R extends CommonAPI> {
     data: T;
@@ -62,7 +62,7 @@ class ServerManager {
         const targetData = this.targetData[targetName];
 
         // Get the target API
-        const targetAPI = this.controller.InstanceLogin<ADS>(
+        const targetAPI = await this.controller.InstanceLogin<ADS>(
             targetData.data.InstanceId, "ADS"
         );
 
@@ -96,11 +96,11 @@ class ServerManager {
      * @returns {Promise<ADS>} The instance API
      */
     async getTargetAPI(targetName: string): Promise<ADS> {
-        if (this.instanceData[targetName].api === undefined) {
+        if (this.targetData[targetName].api === undefined) {
             await this.initTargetAPI(targetName);
         }
 
-        return this.instanceData[targetName].api;
+        return this.targetData[targetName].api;
     }
 
     /**
