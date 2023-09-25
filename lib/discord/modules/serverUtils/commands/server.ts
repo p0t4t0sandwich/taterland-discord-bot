@@ -13,6 +13,7 @@ import { SlashCommandBooleanOption, SlashCommandBuilder, SlashCommandStringOptio
 import { Logger } from '../../../../utils/Logger.js';
 
 // Import locales
+import globalCommandLocales from '../../../../../locales/commands/global.json' assert { type: "json" };
 import serverCommandLocales from '../../../../../locales/commands/server.json' assert { type: "json" };
 import { serverManager } from '../utils/ServerManager.js';
 import { ActionResult, Status, lookupState } from '@neuralnexus/ampapi';
@@ -41,9 +42,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.start.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
@@ -53,9 +54,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.stop.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
@@ -65,9 +66,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.restart.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
@@ -77,9 +78,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.kill.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
@@ -89,9 +90,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.sleep.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
@@ -101,9 +102,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.send.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 ).addStringOption((option: SlashCommandStringOption) =>
                     option.setName("command")
@@ -119,9 +120,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.status.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
@@ -131,9 +132,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.backup.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 ).addStringOption((option: SlashCommandStringOption) =>
                     option.setName("backup_name")
@@ -161,9 +162,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.players.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
-                        .setNameLocalizations(serverCommandLocales.server.global.variable.server_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
                         .setDescription("Name of the server")
-                        .setDescriptionLocalizations(serverCommandLocales.server.global.variable.server_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
                         .setRequired(true)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
@@ -173,9 +174,9 @@ const command = {
                 .setDescriptionLocalizations(serverCommandLocales.server.find.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("player_name")
-                        .setNameLocalizations(serverCommandLocales.server.find.variable.player_name.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
                         .setDescription("Name of the player")
-                        .setDescriptionLocalizations(serverCommandLocales.server.find.variable.player_name.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.player_name.description)
                         .setRequired(true)
                 )
         ),
@@ -202,6 +203,19 @@ const command = {
             return;
         }
 
+        // Local functions
+        async function serverNotExists(serverName: string): Promise<boolean> {
+            if (!serverManager.serverExists(serverName)) {
+                await interaction.editReply({ embeds: [{
+                    color: 0xbf0f0f,
+                    title: "Server not found",
+                    description: `The server ${serverName} does not exist.`,
+                }] });
+                return true;
+            }
+            return false;
+        }
+
         // Handle subcommands
         switch (subcommand) {
 
@@ -216,7 +230,10 @@ const command = {
             // Start a server
             case 'start': {
                 const serverName: string = interaction.options.getString("server_name");
+                if (await serverNotExists(serverName)) return;
+
                 const result: ActionResult<any> = await serverManager.startServer(serverName);
+
                 embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Started server " + serverName + ".";
@@ -230,6 +247,8 @@ const command = {
             // Stop a server
             case 'stop': {
                 const serverName: string = interaction.options.getString("server_name");
+                if (await serverNotExists(serverName)) return;
+
                 await serverManager.stopServer(serverName);
                 embed.title = serverName;
                 embed.description = "Stopped server " + serverName + ".";
@@ -240,6 +259,8 @@ const command = {
             // Restart a server
             case 'restart': {
                 const serverName: string = interaction.options.getString("server_name");
+                if (await serverNotExists(serverName)) return;
+
                 const result: ActionResult<any> = await serverManager.restartServer(serverName);
                 embed.title = serverName;
                 if (result.Status === true) {
@@ -254,6 +275,8 @@ const command = {
             // Kill a server
             case 'kill': {
                 const serverName: string = interaction.options.getString("server_name");
+                if (await serverNotExists(serverName)) return;
+
                 await serverManager.killServer(serverName);
                 embed.title = serverName;
                 embed.description = "Killed server " + serverName + ".";
@@ -264,6 +287,8 @@ const command = {
             // Put a server to sleep
             case 'sleep': {
                 const serverName: string = interaction.options.getString("server_name");
+                if (await serverNotExists(serverName)) return;
+
                 const result: ActionResult<any> = await serverManager.sleepServer(serverName);
                 embed.title = serverName;
                 if (result.Status === true) {
@@ -279,6 +304,8 @@ const command = {
             case 'send': {
                 const serverName: string = interaction.options.getString("server_name");
                 const command: string = interaction.options.getString("command");
+                if (await serverNotExists(serverName)) return;
+
                 await serverManager.sendConsoleMessageToServer(serverName, command);
                 embed.title = serverName;
                 embed.description = "Sent command to server " + serverName + ".";
@@ -289,6 +316,8 @@ const command = {
             // Get the status of a server
             case 'status':
                 const serverName: string = interaction.options.getString("server_name");
+                if (await serverNotExists(serverName)) return;
+
                 const status: Status = await serverManager.getServerStatus(serverName);
 
                 let state: string = lookupState(status.State);
@@ -354,6 +383,7 @@ const command = {
                 const backupName: string = interaction.options.getString("backup_name");
                 const description: string = interaction.options.getString("description");
                 const isSticky: boolean = interaction.options.getBoolean("is_sticky");
+                if (await serverNotExists(serverName)) return;
 
                 const result: ActionResult<any> = await serverManager.backupServer(serverName, backupName, description, isSticky);
                 embed.title = serverName;
@@ -369,6 +399,8 @@ const command = {
             // Get the players of a server
             case 'players':{
                 const serverName: string = interaction.options.getString("server_name");
+                if (await serverNotExists(serverName)) return;
+
                 const players: string[] = await serverManager.parsePlayerList(
                     await serverManager.getPlayerList(serverName)
                 );
@@ -380,6 +412,8 @@ const command = {
             // Find the server that a player is on
             case 'find':{
                 const playerName: string = interaction.options.getString("player_name");
+                if (await serverNotExists(serverName)) return;
+
                 const server: string = await serverManager.findPlayer(playerName);
                 embed.title = "Finding player " + playerName;
                 if (server) {

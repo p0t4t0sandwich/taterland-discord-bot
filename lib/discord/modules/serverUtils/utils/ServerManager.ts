@@ -3,7 +3,7 @@
  * @description Game server manager utility class
  */
 
-import { ADS, ActionResult, CommonAPI, IADSInstance, Instance, Status } from "@neuralnexus/ampapi";
+import { ADS, ActionResult, CommonAPI, IADSInstance, Instance, Minecraft, Status } from "@neuralnexus/ampapi";
 
 interface InstanceData<T,R extends CommonAPI> {
     data: T;
@@ -120,10 +120,20 @@ class ServerManager {
     /**
      * @method listServers
      * @description Lists all servers
-     * @returns {Promise<string[]>} The result of the action
+     * @returns {string[]} The result of the action
      */
-    async listServers(): Promise<string[]> {
+    listServers(): string[] {
         return Object.keys(this.instanceData);
+    }
+
+    /**
+     * @method serverExists
+     * @description Checks if a server exists
+     * @param {string} instanceName The name of the instance to check
+     * @returns {boolean} Whether or not the server exists
+     */
+    serverExists(instanceName: string): boolean {
+        return Object.keys(this.instanceData).includes(instanceName);
     }
 
     /**
@@ -233,6 +243,37 @@ class ServerManager {
             const playerList: { [key: string]: string } = await this.getPlayerList(instanceName);
             if (Object.keys(playerList).includes(playerName)) return instanceName;
         }
+    }
+
+    // ------------------------------ Minecraft ------------------------------
+    isMinecraftServer(instanceName: string): boolean {
+        return this.instanceData[instanceName].data.Module === "Minecraft";
+    }
+
+    async whitelistAdd(instanceName: string, playerName: string): Promise<void> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        const status: Status = await API.Core.GetStatus();
+        if (status.State === 20) { // 20 = Running
+            await API.Core.SendConsoleMessage(`whitelist add ${playerName}`);
+        } else {
+            // TODO Some other idea using the FileManager
+        }
+    }
+
+    async whitelistRemove(instanceName: string, playerName: string): Promise<void> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        const status: Status = await API.Core.GetStatus();
+        if (status.State === 20) { // 20 = Running
+            await API.Core.SendConsoleMessage(`whitelist remove ${playerName}`);
+        } else {
+            // TODO Some other idea using the FileManager
+        }
+    }
+
+    async whitelistList(instanceName: string): Promise<string[]> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        // TODO Read the whitelist.json file
+        return [];
     }
 }
 
