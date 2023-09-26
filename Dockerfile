@@ -1,4 +1,4 @@
-FROM node:19
+FROM oven/bun
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY tsconfig.json ./
 
 COPY package.json ./
 
-RUN npm i
+RUN bun i
 
 COPY README.md ./
 
@@ -18,6 +18,6 @@ COPY ./lib ./lib
 
 COPY index.ts ./
 
-RUN /app/node_modules/typescript/bin/tsc
+RUN bun tsc
 
-CMD ["node", "./dist/index.js"]
+CMD ["bun", "./dist/index.js"]
