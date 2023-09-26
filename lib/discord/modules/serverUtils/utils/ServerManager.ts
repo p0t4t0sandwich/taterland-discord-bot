@@ -308,13 +308,14 @@ class ServerManager {
      * @description Bans a player
      * @param instanceName The name of the instance to ban the player on
      * @param playerName The name of the player to ban
+     * @param reason The reason to ban the player
      * @returns {Promise<void>} The result of the action
      */
-    async banPlayer(instanceName: string, playerName: string): Promise<void> {
+    async banPlayer(instanceName: string, playerName: string, reason: string): Promise<void> {
         const API = <Minecraft>await this.getIntanceAPI(instanceName);
         const status: Status = await API.Core.GetStatus();
         if (status.State === 20) { // 20 = Running
-            await API.Core.SendConsoleMessage(`ban ${playerName}`);
+            await API.Core.SendConsoleMessage(`ban ${playerName} ${reason}`);
         } else {
             // TODO Some other idea using the FileManager
         }
@@ -354,10 +355,11 @@ class ServerManager {
      * @description Kicks a player
      * @param instanceName The name of the instance to kick the player on
      * @param playerName The name of the player to kick
+     * @param reason The reason to kick the player
      */
-    async kickPlayer(instanceName: string, playerName: string): Promise<void> {
+    async kickPlayer(instanceName: string, playerName: string, reason: string): Promise<void> {
         const API = <Minecraft>await this.getIntanceAPI(instanceName);
-        await API.Core.SendConsoleMessage(`kick ${playerName}`);
+        await API.Core.SendConsoleMessage(`kick ${playerName} ${reason}`);
     }
 
     /**

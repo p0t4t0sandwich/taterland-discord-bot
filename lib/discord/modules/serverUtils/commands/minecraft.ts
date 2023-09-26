@@ -96,6 +96,12 @@ const command = {
                         .setDescription("Name of the player")
                         .setDescriptionLocalizations(globalCommandLocales.global.variable.player_name.description)
                         .setRequired(true)
+                ).addStringOption((option: SlashCommandStringOption) =>
+                    option.setName("reason")
+                        // .setNameLocalizations(globalCommandLocales.global.variable.reason.name)
+                        .setDescription("Reason for the ban")
+                        // .setDescriptionLocalizations(globalCommandLocales.global.variable.reason.description)
+                        .setRequired(false)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("pardon")
@@ -162,6 +168,12 @@ const command = {
                         .setDescription("Name of the player")
                         .setDescriptionLocalizations(globalCommandLocales.global.variable.player_name.description)
                         .setRequired(true)
+                ).addStringOption((option: SlashCommandStringOption) =>
+                option.setName("reason")
+                    // .setNameLocalizations(globalCommandLocales.global.variable.reason.name)
+                    .setDescription("Reason for the ban")
+                    // .setDescriptionLocalizations(globalCommandLocales.global.variable.reason.description)
+                    .setRequired(false)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("kill")
@@ -226,7 +238,7 @@ const command = {
         const subcommandGroup = interaction.options.getSubcommandGroup();
 
         // Log command
-        logger.log(guildID, discordID, interaction.commandName + " " + subcommand);
+        logger.log(guildID, discordID, interaction.commandName + " " + subcommandGroup + " " + subcommand);
 
         const embed = {
             color: 0xbf0f0f,
@@ -268,8 +280,9 @@ const command = {
         }
 
         // Handle subcommands
-        const serverName = interaction.options.getString("server_name");
-        const playerName = interaction.options.getString("player_name");
+        const serverName: string = interaction.options.getString("server_name");
+        const playerName: string = interaction.options.getString("player_name");
+        const reason: string = interaction.options.getString("reason");
         if (await serverNotExists(serverName)) return;
         if (!await isMinecraftServer(serverName)) return;
         switch(subcommandGroup) {
@@ -278,7 +291,7 @@ const command = {
                 switch(subcommand) {
                     // Ban
                     case "ban":
-                        await serverManager.banPlayer(serverName, playerName);
+                        await serverManager.banPlayer(serverName, playerName, reason);
                         embed.title = "Ban";
                         embed.description = `Banned ${playerName} from ${serverName}.`;
                         await interaction.editReply({ embeds: [embed] });
@@ -308,7 +321,7 @@ const command = {
                         break;
                     // Kick
                     case "kick":
-                        await serverManager.kickPlayer(serverName, playerName);
+                        await serverManager.kickPlayer(serverName, playerName, reason);
                         embed.title = "Kick";
                         embed.description = `Kicked ${playerName} from ${serverName}.`;
                         await interaction.editReply({ embeds: [embed] });
@@ -336,7 +349,7 @@ const command = {
                         break;
                     default:
                         embed.title = "Invalid subcommand";
-                        embed.description = "The subcommand you entered is invalid.";
+                        embed.description = `Subcommand ${subcommand} is invalid.`;
                         await interaction.editReply({ embeds: [embed] });
                 }
                 break;
@@ -384,7 +397,7 @@ const command = {
                 break;
             default:
                 embed.title = "Invalid subcommand group";
-                embed.description = "The subcommand group you entered is invalid.";
+                embed.description = `The subcommand group ${subcommandGroup} is invalid.`;
                 await interaction.editReply({ embeds: [embed] });
         }
     }
