@@ -18,4 +18,4 @@ COPY ./lib ./lib
 
 COPY index.ts ./
 
-CMD ["bun run", "./index.ts"]
+CMD ["bun", "run", "./index.ts"]
