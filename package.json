@@ -27,6 +27,7 @@
   ],
   "scripts": {
     "build": "bun tsc",
-    "build2": "./node_modules/.bin/esbuild ./index.ts --loader:.ts=ts --format=esm --bundle --minify --platform=node --outfile=./dist/index.min.js"
+    "build2": "bun build --minify --outfile=./index.min.js --target node ./index.ts",
+    "build3": "./node_modules/.bin/esbuild ./index.ts --loader:.ts=ts --format=esm --bundle --minify --platform=node --outfile=./dist/index.min.js"
   }
 }

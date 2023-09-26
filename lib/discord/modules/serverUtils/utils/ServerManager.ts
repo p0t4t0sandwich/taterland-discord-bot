@@ -410,13 +410,13 @@ class ServerManager {
 
 }
 
-// Async setInterval to refresh the server manager
-setInterval(async () => {
-    await serverManager.initInstanceData();
-}, 1000 * 60 * 5); // 5 minutes
-
-// Export the server manager
 const serverManager = new ServerManager();
-await serverManager.initInstanceData();
+
+// Async setInterval to refresh the server manager
+async function init(): Promise<void> {
+    await serverManager.initInstanceData();
+    setTimeout(async () => await init(), 1000 * 60 * 5); // 5 minutes
+}
+await init();
 
 export { ServerManager, serverManager }
