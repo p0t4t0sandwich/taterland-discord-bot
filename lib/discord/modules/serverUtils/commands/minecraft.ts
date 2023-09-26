@@ -287,7 +287,7 @@ const command = {
         if (!await isMinecraftServer(serverName)) return;
         switch(subcommandGroup) {
             // No subcommand group
-            case undefined: {
+            case null: {
                 switch(subcommand) {
                     // Ban
                     case "ban":
