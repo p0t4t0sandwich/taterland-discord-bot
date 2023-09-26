@@ -27,13 +27,16 @@ class ServerManager {
     private instanceData: { [key: string]: InstanceData<Instance, CommonAPI> } = {};
 
     async initInstanceData(): Promise<void> {
+        // Clear data
+        this.targetData = {};
+        this.instanceData = {};
+
         await this.controller.APILogin();
 
         // Get all instances
         const targets = (await this.controller.ADSModule.GetInstances()).result;
 
         for (const target of targets) {
-
             // Store the target data
             this.targetData[target.FriendlyName] = {
                 data: target,
@@ -246,10 +249,22 @@ class ServerManager {
     }
 
     // ------------------------------ Minecraft ------------------------------
+    /**
+     * @method isMinecraftServer
+     * @description Checks if an instance is a Minecraft server
+     * @param instanceName The name of the instance to check
+     * @returns {boolean} Whether the instance is a Minecraft server
+     */
     isMinecraftServer(instanceName: string): boolean {
         return this.instanceData[instanceName].data.Module === "Minecraft";
     }
 
+    /**
+     * @method whitelistAdd
+     * @description Adds a player to the whitelist
+     * @param instanceName The name of the instance to add the player to the whitelist of
+     * @param playerName The name of the player to add to the whitelist
+     */
     async whitelistAdd(instanceName: string, playerName: string): Promise<void> {
         const API = <Minecraft>await this.getIntanceAPI(instanceName);
         const status: Status = await API.Core.GetStatus();
@@ -260,6 +275,12 @@ class ServerManager {
         }
     }
 
+    /**
+     * @method whitelistRemove
+     * @description Removes a player from the whitelist
+     * @param instanceName The name of the instance to remove the player from the whitelist of
+     * @param playerName The name of the player to remove from the whitelist
+     */
     async whitelistRemove(instanceName: string, playerName: string): Promise<void> {
         const API = <Minecraft>await this.getIntanceAPI(instanceName);
         const status: Status = await API.Core.GetStatus();
@@ -270,12 +291,126 @@ class ServerManager {
         }
     }
 
+    /**
+     * @method whitelistList
+     * @description Lists all players on the whitelist
+     * @param instanceName The name of the instance to list the whitelist of
+     * @returns {Promise<string[]>} The whitelist
+     */
     async whitelistList(instanceName: string): Promise<string[]> {
         const API = <Minecraft>await this.getIntanceAPI(instanceName);
         // TODO Read the whitelist.json file
         return [];
     }
+
+    /**
+     * @method banPlayer
+     * @description Bans a player
+     * @param instanceName The name of the instance to ban the player on
+     * @param playerName The name of the player to ban
+     * @returns {Promise<void>} The result of the action
+     */
+    async banPlayer(instanceName: string, playerName: string): Promise<void> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        const status: Status = await API.Core.GetStatus();
+        if (status.State === 20) { // 20 = Running
+            await API.Core.SendConsoleMessage(`ban ${playerName}`);
+        } else {
+            // TODO Some other idea using the FileManager
+        }
+    }
+
+    /**
+     * @method pardonPlayer
+     * @description Unbans a player
+     * @param instanceName The name of the instance to unban the player on
+     * @param playerName The name of the player to unban
+     * @returns {Promise<void>} The result of the action
+     */
+    async pardonPlayer(instanceName: string, playerName: string): Promise<void> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        const status: Status = await API.Core.GetStatus();
+        if (status.State === 20) { // 20 = Running
+            await API.Core.SendConsoleMessage(`pardon ${playerName}`);
+        } else {
+            // TODO Some other idea using the FileManager
+        }
+    }
+
+    /**
+     * @method banlistList
+     * @description Lists all banned players
+     * @param instanceName The name of the instance to list the banlist of
+     * @returns {Promise<string[]>} The banlist
+     */
+    async banlistList(instanceName: string): Promise<string[]> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        // TODO Read the banned-players.json file
+        return [];
+    }
+
+    /**
+     * @method kickPlayer
+     * @description Kicks a player
+     * @param instanceName The name of the instance to kick the player on
+     * @param playerName The name of the player to kick
+     */
+    async kickPlayer(instanceName: string, playerName: string): Promise<void> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        await API.Core.SendConsoleMessage(`kick ${playerName}`);
+    }
+
+    /**
+     * @method killPlayer
+     * @description Kills a player
+     * @param instanceName The name of the instance to kill the player on
+     * @param playerName The name of the player to kill
+     */
+    async killPlayer(instanceName: string, playerName: string): Promise<void> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        await API.Core.SendConsoleMessage(`kill ${playerName}`);
+    }
+
+    /**
+     * @method opPlayer
+     * @description Ops a player
+     * @param instanceName The name of the instance to op the player on
+     * @param playerName The name of the player to op
+     */
+    async opPlayer(instanceName: string, playerName: string): Promise<void> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        const status: Status = await API.Core.GetStatus();
+        if (status.State === 20) { // 20 = Running
+            await API.Core.SendConsoleMessage(`op ${playerName}`);
+        } else {
+            // TODO Some other idea using the FileManager
+        }
+    }
+
+    /**
+     * @method deopPlayer
+     * @description Deops a player
+     * @param instanceName The name of the instance to deop the player on
+     * @param playerName The name of the player to deop
+     */
+    async deopPlayer(instanceName: string, playerName: string): Promise<void> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        const status: Status = await API.Core.GetStatus();
+        if (status.State === 20) { // 20 = Running
+            await API.Core.SendConsoleMessage(`deop ${playerName}`);
+        } else {
+            // TODO Some other idea using the FileManager
+        }
+    }
+
+    // ------------------------------ On All Servers ------------------------------
+
 }
+
+// Async setTimout to refresh the server manager
+setInterval(async () => {
+    await serverManager.initInstanceData();
+}, 1000 * 60 * 5); // 5 minutes
 
 // Export the server manager
 const serverManager = new ServerManager();
