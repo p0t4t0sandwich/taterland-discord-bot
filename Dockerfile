@@ -2,10 +2,22 @@ FROM node:19
 
 WORKDIR /app
 
-COPY ./package.json ./
+COPY LICENSE ./
 
-RUN npm install
+COPY tsconfig.json ./
 
-COPY ./dist/index.js ./
+COPY package.json ./
 
-CMD ["node", "./index.js"]
+RUN npm i
+
+COPY README.md ./
+
+COPY ./locales ./locales
+
+COPY ./lib ./lib
+
+COPY index.ts ./
+
+RUN /app/node_modules/typescript/bin/tsc
+
+CMD ["node", "./dist/index.js"]
