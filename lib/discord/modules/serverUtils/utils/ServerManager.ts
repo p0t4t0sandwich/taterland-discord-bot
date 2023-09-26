@@ -407,7 +407,7 @@ class ServerManager {
 
 }
 
-// Async setTimout to refresh the server manager
+// Async setInterval to refresh the server manager
 setInterval(async () => {
     await serverManager.initInstanceData();
 }, 1000 * 60 * 5); // 5 minutes

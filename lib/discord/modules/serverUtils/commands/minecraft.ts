@@ -134,6 +134,18 @@ const command = {
                         .setRequired(true)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
+            subcommand.setName("banlist")
+            // .setNameLocalizations(serverCommandLocales.minecraft.banlist.name)
+                .setDescription("Lists all banned players")
+            // .setDescriptionLocalizations(serverCommandLocales.minecraft.banlist.description)
+                .addStringOption((option: SlashCommandStringOption) =>
+                    option.setName("server_name")
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
+                        .setDescription("Name of the server")
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
+                        .setRequired(true)
+                )
+        ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("kick")
             // .setNameLocalizations(serverCommandLocales.minecraft.kick.name)
                 .setDescription("Kicks a player")
@@ -277,6 +289,21 @@ const command = {
                         await serverManager.pardonPlayer(serverName, playerName);
                         embed.title = "Pardon";
                         embed.description = `Pardoned ${playerName} from ${serverName}.`;
+                        await interaction.editReply({ embeds: [embed] });
+                        break;
+                    // Banlist
+                    case "banlist":
+                        const banlist = await serverManager.banlistList(serverName);
+        
+                        embed.title = "Banlist list";
+                        embed.description = `Banlist of ${serverName}:`;
+                        embed.fields = banlist.map((playerName: string) => {
+                            return {
+                                name: playerName,
+                                value: " ",
+                                inline: true
+                            };
+                        });
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     // Kick

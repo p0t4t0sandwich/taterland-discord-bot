@@ -10,6 +10,7 @@ import { Logger } from '../utils/Logger.js';
 // Import commands
 import { command as funnyCommand } from './modules/funny/commands/funny.js';
 import { command as serverCommand } from './modules/serverUtils/commands/server.js';
+import { command as minecraftCommand } from './modules/serverUtils/commands/minecraft.js';
 
 /**
  * @interface CustomClient
@@ -104,7 +105,8 @@ class DiscordBot {
 
             const rawCommands = [
                 funnyCommand,
-                serverCommand
+                serverCommand,
+                minecraftCommand
             ];
 
             for (const rawCommand of rawCommands) {
