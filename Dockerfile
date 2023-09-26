@@ -18,6 +18,4 @@ COPY ./lib ./lib
 
 COPY index.ts ./
 
-RUN bun tsc
-
-CMD ["bun", "./dist/index.js"]
+CMD ["bun run", "./index.ts"]
