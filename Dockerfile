@@ -20,7 +20,7 @@ COPY ./lib ./lib
 
 COPY index.ts ./
 
-RUN /app/node_modules/typescript/bin/tsc -p /app/tsconfig.build.json
+RUN /app/node_modules/typescript/bin/tsc
 
 # CMD ["bun", "./index.ts"]
 CMD ["node", "./dist/index.js"]
