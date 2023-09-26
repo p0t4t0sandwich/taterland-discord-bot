@@ -12,6 +12,7 @@ import globalCommandLocales from '../../../../../locales/commands/global.json' a
 // import serverCommandLocales from '../../../../../locales/commands/server.json' assert { type: "json" };
 import { serverManager } from '../utils/ServerManager.js';
 import { ActionResult, Status, lookupState } from '@neuralnexus/ampapi';
+import { EmbedColors } from '../../../../utils/EmbedColors.js';
 
 const logger: Logger = new Logger('minecraftCommand', 'discord');
 const clientId: string = process.env.DISCORD_CLIENT_ID;
@@ -241,7 +242,7 @@ const command = {
         logger.log(guildID, discordID, interaction.commandName + " " + subcommandGroup + " " + subcommand);
 
         const embed = {
-            color: 0xbf0f0f,
+            color: EmbedColors.RED,
             title: "Minecraft command",
             description: "An unknown error occurred.",
             fields: []
@@ -258,7 +259,7 @@ const command = {
         async function serverNotExists(serverName: string): Promise<boolean> {
             if (!serverManager.serverExists(serverName)) {
                 await interaction.editReply({ embeds: [{
-                    color: 0xbf0f0f,
+                    color: EmbedColors.RED,
                     title: "Server not found",
                     description: `The server ${serverName} does not exist.`,
                 }] });
@@ -270,7 +271,7 @@ const command = {
         async function isMinecraftServer(serverName: string): Promise<boolean> {
             if (!serverManager.isMinecraftServer(serverName)) {
                 await interaction.editReply({ embeds: [{
-                    color: 0xbf0f0f,
+                    color: EmbedColors.RED,
                     title: "Server not found",
                     description: `The server ${serverName} is not a Minecraft server.`,
                 }] });
@@ -294,6 +295,7 @@ const command = {
                         await serverManager.banPlayer(serverName, playerName, reason);
                         embed.title = "Ban";
                         embed.description = `Banned ${playerName} from ${serverName}.`;
+                        embed.color = EmbedColors.GREEN;
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     // Unban/Pardon
@@ -302,6 +304,7 @@ const command = {
                         await serverManager.pardonPlayer(serverName, playerName);
                         embed.title = "Pardon";
                         embed.description = `Pardoned ${playerName} from ${serverName}.`;
+                        embed.color = EmbedColors.GREEN;
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     // Banlist
@@ -310,6 +313,7 @@ const command = {
         
                         embed.title = "Banlist list";
                         embed.description = `Banlist of ${serverName}:`;
+                        embed.color = EmbedColors.GREEN;
                         embed.fields = banlist.map((playerName: string) => {
                             return {
                                 name: playerName,
@@ -324,6 +328,7 @@ const command = {
                         await serverManager.kickPlayer(serverName, playerName, reason);
                         embed.title = "Kick";
                         embed.description = `Kicked ${playerName} from ${serverName}.`;
+                        embed.color = EmbedColors.GREEN;
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     // Kill
@@ -331,6 +336,7 @@ const command = {
                         await serverManager.killPlayer(serverName, playerName);
                         embed.title = "Kill";
                         embed.description = `Killed ${playerName} from ${serverName}.`;
+                        embed.color = EmbedColors.GREEN;
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     // Op
@@ -338,6 +344,7 @@ const command = {
                         await serverManager.opPlayer(serverName, playerName);
                         embed.title = "Op";
                         embed.description = `Opped ${playerName} from ${serverName}.`;
+                        embed.color = EmbedColors.GREEN;
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     // Deop
@@ -345,6 +352,7 @@ const command = {
                         await serverManager.deopPlayer(serverName, playerName);
                         embed.title = "Deop";
                         embed.description = `Deopped ${playerName} from ${serverName}.`;
+                        embed.color = EmbedColors.GREEN;
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     default:
@@ -362,6 +370,7 @@ const command = {
         
                         embed.title = "Whitelist add";
                         embed.description = `Added ${playerName} to the whitelist of ${serverName}.`;
+                        embed.color = EmbedColors.GREEN;
                         await interaction.editReply({ embeds: [embed] });
                         break;
         
@@ -371,6 +380,7 @@ const command = {
         
                         embed.title = "Whitelist remove";
                         embed.description = `Removed ${playerName} from the whitelist of ${serverName}.`;
+                        embed.color = EmbedColors.GREEN;
                         await interaction.editReply({ embeds: [embed] });
                         break;
         
@@ -380,6 +390,7 @@ const command = {
         
                         embed.title = "Whitelist list";
                         embed.description = `Whitelist of ${serverName}:`;
+                        embed.color = EmbedColors.GREEN;
                         embed.fields = whitelist.map((playerName: string) => {
                             return {
                                 name: playerName,

@@ -1,11 +1,6 @@
 /**
  * @author p0t4t0sandwich
  * @description Server management Discord commands
- * 
- * Colors:
- * - Green: 0x65bf65
- * - Yellow: 0xe6d132
- * - Red: 0xbf0f0f
  */
 
 import { SlashCommandBooleanOption, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder } from 'discord.js';
@@ -17,6 +12,7 @@ import globalCommandLocales from '../../../../../locales/commands/global.json' a
 import serverCommandLocales from '../../../../../locales/commands/server.json' assert { type: "json" };
 import { serverManager } from '../utils/ServerManager.js';
 import { ActionResult, Status, lookupState } from '@neuralnexus/ampapi';
+import { EmbedColors } from '../../../../utils/EmbedColors.js';
 
 const logger: Logger = new Logger('serverCommand', 'discord');
 const clientId: string = process.env.DISCORD_CLIENT_ID;
@@ -190,7 +186,7 @@ const command = {
         logger.log(guildID, discordID, interaction.commandName + " " + subcommand);
 
         const embed = {
-            color: 0xbf0f0f,
+            color: EmbedColors.RED,
             title: "Server command",
             description: "An unknown error occurred.",
             fields: []
@@ -207,7 +203,7 @@ const command = {
         async function serverNotExists(serverName: string): Promise<boolean> {
             if (!serverManager.serverExists(serverName)) {
                 await interaction.editReply({ embeds: [{
-                    color: 0xbf0f0f,
+                    color: EmbedColors.RED,
                     title: "Server not found",
                     description: `The server ${serverName} does not exist.`,
                 }] });
@@ -224,7 +220,7 @@ const command = {
                 const servers: string[] = await serverManager.listServers();
                 embed.title = "Available Servers";
                 embed.description = servers.join(", ");
-                embed.color = 0x65bf65;
+                embed.color = EmbedColors.GREEN;
                 break;
 
             // Start a server
@@ -237,7 +233,7 @@ const command = {
                 embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Started server " + serverName + ".";
-                    embed.color = 0x65bf65;
+                    embed.color = EmbedColors.GREEN;
                 } else {
                     embed.description = "Failed to start server " + serverName + ".\n" + result.Reason;
                 }
@@ -252,7 +248,7 @@ const command = {
                 await serverManager.stopServer(serverName);
                 embed.title = serverName;
                 embed.description = "Stopped server " + serverName + ".";
-                embed.color = 0x65bf65;
+                embed.color = EmbedColors.GREEN;
                 break;
             }
 
@@ -265,7 +261,7 @@ const command = {
                 embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Restarted server " + serverName + ".";
-                    embed.color = 0x65bf65;
+                    embed.color = EmbedColors.GREEN;
                 } else {
                     embed.description = "Failed to restart server " + serverName + ".\n" + result.Reason;
                 }
@@ -280,7 +276,7 @@ const command = {
                 await serverManager.killServer(serverName);
                 embed.title = serverName;
                 embed.description = "Killed server " + serverName + ".";
-                embed.color = 0x65bf65;
+                embed.color = EmbedColors.GREEN;
                 break;
             }
 
@@ -293,7 +289,7 @@ const command = {
                 embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Put server " + serverName + " to sleep.";
-                    embed.color = 0x65bf65;
+                    embed.color = EmbedColors.GREEN;
                 } else {
                     embed.description = "Failed to put server " + serverName + " to sleep.\n" + result.Reason;
                 }
@@ -309,7 +305,7 @@ const command = {
                 await serverManager.sendConsoleMessageToServer(serverName, command);
                 embed.title = serverName;
                 embed.description = "Sent command to server " + serverName + ".";
-                embed.color = 0x65bf65;
+                embed.color = EmbedColors.GREEN;
                 break;
             }
 
@@ -362,16 +358,16 @@ const command = {
 
                 switch (state) {
                     case 'Ready':
-                        embed.color = 0x65bf65;
+                        embed.color = EmbedColors.GREEN;
                         break;
                     case 'Sleeping':
-                        embed.color = 0xe6d132;
+                        embed.color = EmbedColors.YELLOW;
                         break;
                     case 'Failed':
-                        embed.color = 0xbf0f0f;
+                        embed.color = EmbedColors.RED;
                         break;
                     default:
-                        embed.color = 0xbf0f0f;
+                        embed.color = EmbedColors.RED;
                         break;
                 }
 
@@ -389,7 +385,7 @@ const command = {
                 embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Backed up server " + serverName + ".";
-                    embed.color = 0x65bf65;
+                    embed.color = EmbedColors.GREEN;
                 } else {
                     embed.description = "Failed to backup server " + serverName + ".\n" + result.Reason;
                 }
@@ -418,10 +414,10 @@ const command = {
                 embed.title = "Finding player " + playerName;
                 if (server) {
                     embed.description = "Player " + playerName + " is on server " + server + ".";
-                    embed.color = 0x65bf65;
+                    embed.color = EmbedColors.GREEN;
                 } else {
                     embed.description = "Could not find player " + playerName + ".";
-                    embed.color = 0xe6d132;
+                    embed.color = EmbedColors.YELLOW;
                 }
                 break;
             }
