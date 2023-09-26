@@ -5,7 +5,7 @@
 
 import { ADS, ActionResult, CommonAPI, IADSInstance, Instance, Minecraft, Status } from "@neuralnexus/ampapi";
 
-interface InstanceData<T,R extends CommonAPI> {
+interface InstanceData<T, R extends CommonAPI | undefined> {
     data: T;
     api: R;
 }
@@ -19,12 +19,12 @@ interface InstanceData<T,R extends CommonAPI> {
  */
 class ServerManager {
     private controller: ADS = new ADS(
-        process.env.AMP_API_URL,
-        process.env.AMP_API_USERNAME,
-        process.env.AMP_API_PASSWORD
+        <string><unknown>process.env.AMP_API_URL,
+        <string><unknown>process.env.AMP_API_USERNAME,
+        <string><unknown>process.env.AMP_API_PASSWORD
     );
-    private targetData: { [key: string]: InstanceData<IADSInstance, ADS> } = {};
-    private instanceData: { [key: string]: InstanceData<Instance, CommonAPI> } = {};
+    private targetData: { [key: string]: InstanceData<IADSInstance, ADS | undefined> } = {};
+    private instanceData: { [key: string]: InstanceData<Instance, CommonAPI | undefined> } = {};
 
     async initInstanceData(): Promise<void> {
         // Clear data
@@ -80,7 +80,7 @@ class ServerManager {
      */
     async initInstanceAPI(instanceName: string): Promise<void> {
         // Get the instance data
-        const instanceData: InstanceData<Instance,CommonAPI> = this.instanceData[instanceName];
+        const instanceData: InstanceData<Instance,CommonAPI | undefined> = this.instanceData[instanceName];
 
         // Get the instance API
         const instanceAPI = await this.controller.InstanceLogin<CommonAPI>(
@@ -103,7 +103,7 @@ class ServerManager {
             await this.initTargetAPI(targetName);
         }
 
-        return this.targetData[targetName].api;
+        return <ADS>this.targetData[targetName].api;
     }
 
     /**
@@ -117,7 +117,7 @@ class ServerManager {
             await this.initInstanceAPI(instanceName);
         }
 
-        return this.instanceData[instanceName].api;
+        return <CommonAPI>this.instanceData[instanceName].api;
     }
 
     /**
@@ -246,6 +246,7 @@ class ServerManager {
             const playerList: { [key: string]: string } = await this.getPlayerList(instanceName);
             if (Object.keys(playerList).includes(playerName)) return instanceName;
         }
+        return "Player not found";
     }
 
     // ------------------------------ Minecraft ------------------------------

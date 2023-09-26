@@ -15,8 +15,8 @@ import { ActionResult, Status, lookupState } from '@neuralnexus/ampapi';
 import { EmbedColors } from '../../../../utils/EmbedColors.js';
 
 const logger: Logger = new Logger('minecraftCommand', 'discord');
-const clientId: string = process.env.DISCORD_CLIENT_ID;
-const DISCORD_ADMIN_IDS: string[] = process.env.DISCORD_ADMIN_IDS.split(",");
+const clientId: string = <string><unknown>process.env.DISCORD_CLIENT_ID;
+const DISCORD_ADMIN_IDS: string[] = (<string><unknown>process.env.DISCORD_ADMIN_IDS).split(",");
 
 const command = {
     data: new SlashCommandBuilder()
@@ -245,7 +245,7 @@ const command = {
             color: EmbedColors.RED,
             title: "Minecraft command",
             description: "An unknown error occurred.",
-            fields: []
+            fields: [{}]
         };
 
         if (!DISCORD_ADMIN_IDS.includes(discordID)) {

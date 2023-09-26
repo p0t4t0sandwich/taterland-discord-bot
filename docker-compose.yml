@@ -12,12 +12,4 @@ services:
       - AMP_API_URL=                 # URL of the AMP server
       - AMP_API_USERNAME=            # Username for the AMP server
       - AMP_API_PASSWORD=            # Password for the AMP server
-      - REST_PORT=               # Port to listen on
-      - MONGODB_URI=             # MongoDB connection string
-      - MONGODB_DB=              # MongoDB database name
-      - DOMAIN=                  # Domain name for the REST API
-      - ROOT_ENDPOINT=           # Root endpoint for the REST API
-      - AUTH_TOKEN=              # Auth token for the REST API
-    ports:
-      - "0.0.0.0:3002:3002"
     restart: unless-stopped

@@ -15,8 +15,8 @@ import { ActionResult, Status, lookupState } from '@neuralnexus/ampapi';
 import { EmbedColors } from '../../../../utils/EmbedColors.js';
 
 const logger: Logger = new Logger('serverCommand', 'discord');
-const clientId: string = process.env.DISCORD_CLIENT_ID;
-const DISCORD_ADMIN_IDS: string[] = process.env.DISCORD_ADMIN_IDS.split(",");
+const clientId: string = <string><unknown>process.env.DISCORD_CLIENT_ID;
+const DISCORD_ADMIN_IDS: string[] = (<string><unknown>process.env.DISCORD_ADMIN_IDS).split(",");
 
 const command = {
     data: new SlashCommandBuilder()
@@ -189,7 +189,7 @@ const command = {
             color: EmbedColors.RED,
             title: "Server command",
             description: "An unknown error occurred.",
-            fields: []
+            fields: [{}]
         };
 
         if (!DISCORD_ADMIN_IDS.includes(discordID)) {
@@ -408,7 +408,6 @@ const command = {
             // Find the server that a player is on
             case 'find':{
                 const playerName: string = interaction.options.getString("player_name");
-                if (await serverNotExists(serverName)) return;
 
                 const server: string = await serverManager.findPlayer(playerName);
                 embed.title = "Finding player " + playerName;

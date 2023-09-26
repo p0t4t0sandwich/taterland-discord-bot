@@ -84,7 +84,7 @@ class DiscordBot {
         // Execute the command
         try {
             await command.execute(interaction);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.log("Error", this.clientId, error.toString());
             console.log(error);
             await interaction.editReply({ content: 'There was an error while executing this command!' });
@@ -116,6 +116,7 @@ class DiscordBot {
 
             const rest = new REST({ version: '10' }).setToken(this.token);
 
+            if (client.user === null) return;
             this.logger.log("Info", this.clientId, `Ready! Logged in as ${client.user.tag}`);
 
             (async () => {
@@ -151,7 +152,7 @@ class DiscordBot {
         // Handle events
         client.on(Events.InteractionCreate, this.onInteractionCreate.bind(this));
 
-        client.once(Events.ClientReady, this.onClientReady.bind(this));
+        client.once(Events.ClientReady, this.onClientReady.bind(this, client));
 
         client.login(this.token);
     }

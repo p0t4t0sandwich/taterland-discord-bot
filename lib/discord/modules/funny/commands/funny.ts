@@ -12,7 +12,7 @@ import { Logger } from '../../../../utils/Logger.js';
 import funnyCommandLocales from '../../../../../locales/commands/funny.json' assert { type: "json" };
 
 const logger: Logger = new Logger('funnyCommand', 'discord');
-const clientId: string = process.env.DISCORD_CLIENT_ID;
+const clientId: string = <string><unknown>process.env.DISCORD_CLIENT_ID;
 
 const command = {
     data: new SlashCommandBuilder()
