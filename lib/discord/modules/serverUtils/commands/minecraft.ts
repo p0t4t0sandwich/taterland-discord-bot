@@ -437,7 +437,7 @@ const command = {
         const serverName: string = interaction.options.getString("server_name");
         const playerName: string = interaction.options.getString("player_name");
         const reason: string = (interaction.options.getString("reason") === null) ? "" : interaction.options.getString("reason");
-        if (await serverNotExists(serverName)) return;
+        if (serverName !== null && await serverNotExists(serverName)) return;
         if (!await isMinecraftServer(serverName)) return;
         switch(subcommandGroup) {
             // No subcommand group
