@@ -406,8 +406,142 @@ class ServerManager {
         }
     }
 
-    // ------------------------------ On All Servers ------------------------------
+    // ------------------------------ On All Minecraft Servers ------------------------------
+    /**
+     * @method whitelistAddAll
+     * @description Adds a player to the whitelist on all Minecraft servers
+     * @param playerName The name of the player to add to the whitelist
+     */
+    async whitelistAddAll(playerName: string): Promise<void> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                await this.whitelistAdd(instanceName, playerName);
+            }
+        }
+    }
 
+    /**
+     * @method whitelistRemoveAll
+     * @description Removes a player from the whitelist on all Minecraft servers
+     * @param playerName The name of the player to remove from the whitelist
+     */
+    async whitelistRemoveAll(playerName: string): Promise<void> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                await this.whitelistRemove(instanceName, playerName);
+            }
+        }
+    }
+
+    /**
+     * @method whitelistListAll
+     * @description Lists all players on the whitelist on all Minecraft servers
+     * @returns {Promise<Map<string,string[]>>} The whitelist
+     */
+    async whitelistListAll(): Promise<Map<string,string[]>> {
+        const whitelist: Map<string,string[]> = new Map();
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                whitelist.set(instanceName, await this.whitelistList(instanceName));
+            }
+        }
+        return whitelist;
+    }
+
+    /**
+     * @method banPlayerAll
+     * @description Bans a player on all Minecraft servers
+     * @param playerName The name of the player to ban
+     * @param reason The reason to ban the player
+     */
+    async banPlayerAll(playerName: string, reason: string): Promise<void> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                await this.banPlayer(instanceName, playerName, reason);
+            }
+        }
+    }
+
+    /**
+     * @method pardonPlayerAll
+     * @description Unbans a player on all Minecraft servers
+     * @param playerName The name of the player to unban
+     */
+    async pardonPlayerAll(playerName: string): Promise<void> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                await this.pardonPlayer(instanceName, playerName);
+            }
+        }
+    }
+
+    /**
+     * @method banlistListAll
+     * @description Lists all banned players on all Minecraft servers
+     * @returns {Promise<Map<string,string[]>>} The banlist
+     */
+    async banlistListAll(): Promise<Map<string,string[]>> {
+        const banlist: Map<string,string[]> = new Map();
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                banlist.set(instanceName, await this.banlistList(instanceName));
+            }
+        }
+        return banlist;
+    }
+
+    /**
+     * @method kickPlayerAll
+     * @description Kicks a player on all Minecraft servers
+     * @param playerName The name of the player to kick
+     * @param reason The reason to kick the player
+     */
+    async kickPlayerAll(playerName: string, reason: string): Promise<void> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                await this.kickPlayer(instanceName, playerName, reason);
+            }
+        }
+    }
+
+    /**
+     * @method killPlayerAll
+     * @description Kills a player on all Minecraft servers
+     * @param playerName The name of the player to kill
+     */
+    async killPlayerAll(playerName: string): Promise<void> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                await this.killPlayer(instanceName, playerName);
+            }
+        }
+    }
+
+    /**
+     * @method opPlayerAll
+     * @description Ops a player on all Minecraft servers
+     * @param playerName The name of the player to op
+     */
+    async opPlayerAll(playerName: string): Promise<void> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                await this.opPlayer(instanceName, playerName);
+            }
+        }
+    }
+
+    /**
+     * @method deopPlayerAll
+     * @description Deops a player on all Minecraft servers
+     * @param playerName The name of the player to deop
+     */
+    async deopPlayerAll(playerName: string): Promise<void> {
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                await this.deopPlayer(instanceName, playerName);
+            }
+        }
+    }
 }
 
 const serverManager = new ServerManager();
