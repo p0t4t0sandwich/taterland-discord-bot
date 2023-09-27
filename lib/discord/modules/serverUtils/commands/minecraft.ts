@@ -86,7 +86,7 @@ const command = {
                 .setDescription("Commands for managing all servers simultaneously")
                 // .setDescriptionLocalizations(globalCommandLocales.global.subcommand_group.all.description)
                 .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
-                    subcommand.setName("whitelistAdd")
+                    subcommand.setName("whitelist_add")
                         // .setNameLocalizations(globalCommandLocales.global.subcommand.whitelist_add_all.name)
                         .setDescription("Adds a player to the whitelist")
                         // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.whitelist_add_all.description)
@@ -98,7 +98,7 @@ const command = {
                                 .setRequired(true)
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
-                    subcommand.setName("whitelistRemove")
+                    subcommand.setName("whitelist_remove")
                         // .setNameLocalizations(globalCommandLocales.global.subcommand.whitelist_remove_all.name)
                         .setDescription("Removes a player from the whitelist")
                         // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.whitelist_remove_all.description)
@@ -110,7 +110,7 @@ const command = {
                                 .setRequired(true)
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
-                    subcommand.setName("whitelistList")
+                    subcommand.setName("whitelist_list")
                         // .setNameLocalizations(globalCommandLocales.global.subcommand.whitelist_list_all.name)
                         .setDescription("Lists all players on the whitelist")
                         // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.whitelist_list_all.description)
@@ -215,6 +215,11 @@ const command = {
                                 .setDescriptionLocalizations(globalCommandLocales.global.variable.player_name.description)
                                 .setRequired(true)
                         )
+                ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
+                    subcommand.setName("oplist")
+                        // .setNameLocalizations(globalCommandLocales.global.subcommand.oplist_all.name)
+                        .setDescription("Lists all ops")
+                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.oplist_all.description)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("ban")
@@ -366,6 +371,18 @@ const command = {
                         .setDescriptionLocalizations(globalCommandLocales.global.variable.player_name.description)
                         .setRequired(true)
                 )
+        ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
+            subcommand.setName("oplist")
+            // .setNameLocalizations(serverCommandLocales.minecraft.oplist.name)
+                .setDescription("Lists all ops")
+            // .setDescriptionLocalizations(serverCommandLocales.minecraft.oplist.description)
+                .addStringOption((option: SlashCommandStringOption) =>
+                    option.setName("server_name")
+                        .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
+                        .setDescription("Name of the server")
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.server_name.description)
+                        .setRequired(true)
+                )
         ),
     async execute(interaction: any) {
         await interaction.deferReply({ ephemeral: true });
@@ -491,6 +508,22 @@ const command = {
                         embed.title = "Deop";
                         embed.description = `Deopped ${playerName} from ${serverName}.`;
                         embed.color = EmbedColors.GREEN;
+                        await interaction.editReply({ embeds: [embed] });
+                        break;
+                    // Oplist
+                    case "oplist":
+                        const oplist = await serverManager.opList(serverName);
+        
+                        embed.title = "Oplist list";
+                        embed.description = `Oplist of ${serverName}:`;
+                        embed.color = EmbedColors.GREEN;
+                        embed.fields = oplist.map((playerName: string) => {
+                            return {
+                                name: playerName,
+                                value: " ",
+                                inline: true
+                            };
+                        });
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     default:
@@ -642,6 +675,22 @@ const command = {
                         embed.title = "Deop";
                         embed.description = `Deopped ${playerName} on all servers.`;
                         embed.color = EmbedColors.GREEN;
+                        await interaction.editReply({ embeds: [embed] });
+                        break;
+                    // Oplist
+                    case "oplist":
+                        const oplist: Map<string, string[]> = await serverManager.opListAll();
+                        embed.title = "Oplist list";
+                        embed.description = "Oplist of all servers:";
+                        embed.color = EmbedColors.GREEN;
+                        embed.fields = [];
+                        oplist.forEach((players: string[], serverName: string) => {
+                            embed.fields.push({
+                                name: serverName,
+                                value: players.join(", "),
+                                inline: false
+                            });
+                        });
                         await interaction.editReply({ embeds: [embed] });
                         break;
                     default:

@@ -406,6 +406,18 @@ class ServerManager {
         }
     }
 
+    /**
+     * @method opList
+     * @description Lists all ops
+     * @param instanceName The name of the instance to list the ops of
+     * @returns {Promise<string[]>} The op list
+     */
+    async opList(instanceName: string): Promise<string[]> {
+        const API = <Minecraft>await this.getIntanceAPI(instanceName);
+        // TODO Read the ops.json file
+        return [];
+    }
+
     // ------------------------------ On All Minecraft Servers ------------------------------
     /**
      * @method whitelistAddAll
@@ -541,6 +553,21 @@ class ServerManager {
                 await this.deopPlayer(instanceName, playerName);
             }
         }
+    }
+
+    /**
+     * @method opListAll
+     * @description Lists all ops on all Minecraft servers
+     * @returns {Promise<Map<string,string[]>>} The op list
+     */
+    async opListAll(): Promise<Map<string,string[]>> {
+        const opList: Map<string,string[]> = new Map();
+        for (const instanceName of Object.keys(this.instanceData)) {
+            if (this.isMinecraftServer(instanceName)) {
+                opList.set(instanceName, await this.opList(instanceName));
+            }
+        }
+        return opList;
     }
 }
 
