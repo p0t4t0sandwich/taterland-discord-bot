@@ -422,6 +422,7 @@ const command = {
         }
 
         async function isMinecraftServer(serverName: string): Promise<boolean> {
+            if (serverName === null) return true;
             if (!serverManager.isMinecraftServer(serverName)) {
                 await interaction.editReply({ embeds: [{
                     color: EmbedColors.RED,
@@ -698,6 +699,7 @@ const command = {
                         embed.description = "The subcommand you entered is invalid.";
                         await interaction.editReply({ embeds: [embed] });
                 }
+                break;
             default:
                 embed.title = "Invalid subcommand group";
                 embed.description = `The subcommand group ${subcommandGroup} is invalid.`;

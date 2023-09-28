@@ -36,5 +36,7 @@ Discord bot for the Taterland Discord server.
 | `/minecraft kill`    | Kill player                         | `server_name` - Name of the server<br>`player_name` - Name of the player                                                                                           | true       |
 | `/minecraft op`      | Op player                           | `server_name` - Name of the server<br>`player_name` - Name of the player                                                                                           | true       |
 | `/minecraft deop`    | Deop player                         | `server_name` - Name of the server<br>`player_name` - Name of the player                                                                                           | true       |
+| `/minecraft oplist`  | List op players                     | `server_name` - Name of the server                                                                                                                                  | true       |
+| `/minecraft all <subcomand>` | Run command on all servers, eg. `/minecraft all whitelist_add`, with the same arguments. | `subcommand` - Subcommand to run on all servers                                                                                                                    | true       |
 
 <!--                  | `/playtime`                         | Get playtime                                                                                                                                                        | None       | false      | -->

@@ -257,6 +257,7 @@ class ServerManager {
      * @returns {boolean} Whether the instance is a Minecraft server
      */
     isMinecraftServer(instanceName: string): boolean {
+        if (!this.serverExists(instanceName)) return false;
         return this.instanceData[instanceName].data.Module === "Minecraft";
     }
 
