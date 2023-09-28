@@ -57,7 +57,7 @@ const locales = {
                     "nl": "reden",
                     "fi": "syy",
                     "fr": "raison",
-                    "de": "Grund",
+                    "de": "grund",
                     "el": "λόγος",
                     "hi": "कारण",
                     "hu": "ok",
@@ -75,7 +75,7 @@ const locales = {
                     "th": "เหตุผล",
                     "tr": "neden",
                     "uk": "причина",
-                    "vi": "lý do"
+                    "vi": "lý_do"
                 },
                 "description": {
                     "id": "Alasan untuk tindakan ini",
@@ -388,8 +388,8 @@ const locales = {
     },
     "unban": {
         "name": {
-            "en-US": "pardon",
-            "en-GB": "pardon"
+            "en-US": "unban",
+            "en-GB": "unban"
         },
         "description": {}
     },
