@@ -5,8 +5,8 @@
 
 const locales = {
     "name": {
-        "en-US": "Minecraft",
-        "en-GB": "Minecraft"
+        "en-US": "minecraft",
+        "en-GB": "minecraft"
     },
     "description": {
         "id": "Perintah untuk mengelola server Minecraft",
