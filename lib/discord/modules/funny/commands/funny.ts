@@ -9,7 +9,7 @@ import { getDadjoke, getFortune, getMeowFact, getUselessFact } from '../utils/ap
 import { Logger } from '../../../../utils/Logger.js';
 
 // Import locales
-import funnyCommandLocales from '../../../../../locales/commands/funny.json' assert { type: "json" };
+import { locales as funnyCommandLocales } from '../../../../../locales/commands/funny.js';
 
 const logger: Logger = new Logger('funnyCommand', 'discord');
 const clientId: string = <string><unknown>process.env.DISCORD_CLIENT_ID;
@@ -17,34 +17,34 @@ const clientId: string = <string><unknown>process.env.DISCORD_CLIENT_ID;
 const command = {
     data: new SlashCommandBuilder()
         .setName('funny')
-        .setNameLocalizations(funnyCommandLocales.funny.name)
+        .setNameLocalizations(funnyCommandLocales.name)
         .setDescription('Various funny commands')
-        .setDescriptionLocalizations(funnyCommandLocales.funny.description)
+        .setDescriptionLocalizations(funnyCommandLocales.description)
         .setDefaultMemberPermissions(0)
         .setDMPermission(true)
         .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName('dad_joke')
-                .setNameLocalizations(funnyCommandLocales.funny.dad_joke.name)
+                .setNameLocalizations(funnyCommandLocales.dad_joke.name)
                 .setDescription('Get a random dad joke')
-                .setDescriptionLocalizations(funnyCommandLocales.funny.dad_joke.description)
+                .setDescriptionLocalizations(funnyCommandLocales.dad_joke.description)
         )
         .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName('fortune')
-                .setNameLocalizations(funnyCommandLocales.funny.fortune.name)
+                .setNameLocalizations(funnyCommandLocales.fortune.name)
                 .setDescription('Get a random fortune')
-                .setDescriptionLocalizations(funnyCommandLocales.funny.fortune.description)
+                .setDescriptionLocalizations(funnyCommandLocales.fortune.description)
         )
         .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName('meow_fact')
-                .setNameLocalizations(funnyCommandLocales.funny.meow_fact.name)
+                .setNameLocalizations(funnyCommandLocales.meow_fact.name)
                 .setDescription('Get a random meow fact')
-                .setDescriptionLocalizations(funnyCommandLocales.funny.meow_fact.description)
+                .setDescriptionLocalizations(funnyCommandLocales.meow_fact.description)
         )
         .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName('useless_fact')
-                .setNameLocalizations(funnyCommandLocales.funny.useless_fact.name)
+                .setNameLocalizations(funnyCommandLocales.useless_fact.name)
                 .setDescription('Get a random useless fact')
-                .setDescriptionLocalizations(funnyCommandLocales.funny.useless_fact.description)
+                .setDescriptionLocalizations(funnyCommandLocales.useless_fact.description)
         ),
     async execute(interaction: any) {
         await interaction.deferReply({ ephemeral: true });
