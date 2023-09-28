@@ -28,7 +28,7 @@ const command = {
         .addSubcommandGroup((subcommandGroup: SlashCommandSubcommandGroupBuilder) =>
             subcommandGroup.setName("whitelist")
                 .setDescription("Commands for managing the whitelist")
-                // .setDescriptionLocalizations(globalCommandLocales.global.subcommand_group.whitelist.description)
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.whitelist.description)
                 .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("add")
                         .setDescription("Adds a player to the whitelist")
@@ -66,7 +66,7 @@ const command = {
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("list")
                         .setDescription("Lists all players on the whitelist")
-                        // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.list.description)
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.whitelist.list.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("server_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -77,14 +77,13 @@ const command = {
                 )
         ).addSubcommandGroup((subcommandGroup: SlashCommandSubcommandGroupBuilder) =>
             subcommandGroup.setName("all")
-                // .setNameLocalizations(globalCommandLocales.global.subcommand_group.all.name)
                 .setDescription("Commands for managing all servers simultaneously")
-                // .setDescriptionLocalizations(globalCommandLocales.global.subcommand_group.all.description)
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.all.description)
                 .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("whitelist_add")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.whitelist_add_all.name)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.whitelist.add.name)
                         .setDescription("Adds a player to the whitelist")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.whitelist_add_all.description)
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.whitelist.add.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -94,9 +93,9 @@ const command = {
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("whitelist_remove")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.whitelist_remove_all.name)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.whitelist.remove.name)
                         .setDescription("Removes a player from the whitelist")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.whitelist_remove_all.description)
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.whitelist.remove.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -106,14 +105,14 @@ const command = {
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("whitelist_list")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.whitelist_list_all.name)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.whitelist.list.name)
                         .setDescription("Lists all players on the whitelist")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.whitelist_list_all.description)
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.whitelist.list.description)
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("ban")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.ban_all.name)
-                        .setDescription("Bans a player")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.ban_all.description)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.ban.name)
+                        .setDescription("Bans a player from the server")
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.ban.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -122,16 +121,16 @@ const command = {
                                 .setRequired(true)
                         ).addStringOption((option: SlashCommandStringOption) =>
                             option.setName("reason")
-                                // .setNameLocalizations(globalCommandLocales.global.variable.reason.name)
+                                .setNameLocalizations(minecraftCommandLocales.minecraft.global.variable.reason.name)
                                 .setDescription("Reason for the ban")
-                                // .setDescriptionLocalizations(globalCommandLocales.global.variable.reason.description)
+                                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.global.variable.reason.description)
                                 .setRequired(false)
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("pardon")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.pardon_all.name)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.pardon.name)
                         .setDescription("Pardons a player")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.pardon_all.description)
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.pardon.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -141,9 +140,9 @@ const command = {
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("unban")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.unban_all.name)
-                        .setDescription("Unbans a player")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.unban_all.description)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.unban.name)
+                        .setDescription("UnBans a player from the server")
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.pardon.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -153,14 +152,14 @@ const command = {
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("banlist")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.banlist_all.name)
-                        .setDescription("Lists all banned players")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.banlist_all.description)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.banlist.name)
+                        .setDescription("Lists the banned players")
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.banlist.description)
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("kick")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.kick_all.name)
-                        .setDescription("Kicks a player")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.kick_all.description)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.kick.name)
+                        .setDescription("Kicks a player from the server")
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.kick.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -169,16 +168,16 @@ const command = {
                                 .setRequired(true)
                         ).addStringOption((option: SlashCommandStringOption) =>
                             option.setName("reason")
-                                // .setNameLocalizations(globalCommandLocales.global.variable.reason.name)
+                                .setNameLocalizations(minecraftCommandLocales.minecraft.global.variable.reason.name)
                                 .setDescription("Reason for the ban")
-                                // .setDescriptionLocalizations(globalCommandLocales.global.variable.reason.description)
+                                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.global.variable.reason.description)
                                 .setRequired(false)
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("kill")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.kill_all.name)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.kill.name)
                         .setDescription("Kills a player")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.kill_all.description)
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.kill.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -188,9 +187,9 @@ const command = {
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("op")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.op_all.name)
-                        .setDescription("Ops a player")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.op_all.description)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.op.name)
+                        .setDescription("Grants a player operator status")
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.op.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -200,9 +199,9 @@ const command = {
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("deop")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.deop_all.name)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.deop.name)
                         .setDescription("Deops a player")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.deop_all.description)
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.deop.description)
                         .addStringOption((option: SlashCommandStringOption) =>
                             option.setName("player_name")
                                 .setNameLocalizations(globalCommandLocales.global.variable.player_name.name)
@@ -212,15 +211,15 @@ const command = {
                         )
                 ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
                     subcommand.setName("oplist")
-                        // .setNameLocalizations(globalCommandLocales.global.subcommand.oplist_all.name)
-                        .setDescription("Lists all ops")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.subcommand.oplist_all.description)
+                        .setNameLocalizations(minecraftCommandLocales.minecraft.oplist.name)
+                        .setDescription("Lists the operators")
+                        .setDescriptionLocalizations(minecraftCommandLocales.minecraft.oplist.description)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("ban")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.ban.name)
-                .setDescription("Bans a player")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.ban.description)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.ban.name)
+                .setDescription("Bans a player from the server")
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.ban.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -235,16 +234,16 @@ const command = {
                         .setRequired(true)
                 ).addStringOption((option: SlashCommandStringOption) =>
                     option.setName("reason")
-                        // .setNameLocalizations(globalCommandLocales.global.variable.reason.name)
+                        .setNameLocalizations(globalCommandLocales.global.variable.reason.name)
                         .setDescription("Reason for the ban")
-                        // .setDescriptionLocalizations(globalCommandLocales.global.variable.reason.description)
+                        .setDescriptionLocalizations(globalCommandLocales.global.variable.reason.description)
                         .setRequired(false)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("pardon")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.pardon.name)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.pardon.name)
                 .setDescription("Pardons a player")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.pardon.description)
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.pardon.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -260,9 +259,9 @@ const command = {
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("unban")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.unban.name)
-                .setDescription("Unbans a player")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.unban.description)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.unban.name)
+                .setDescription("UnBans a player from the server")
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.pardon.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -278,9 +277,9 @@ const command = {
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("banlist")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.banlist.name)
-                .setDescription("Lists all banned players")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.banlist.description)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.banlist.name)
+                .setDescription("Lists the banned players")
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.banlist.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -290,9 +289,9 @@ const command = {
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("kick")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.kick.name)
-                .setDescription("Kicks a player")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.kick.description)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.kick.name)
+                .setDescription("Kicks a player from the server")
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.kick.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -307,16 +306,16 @@ const command = {
                         .setRequired(true)
                 ).addStringOption((option: SlashCommandStringOption) =>
                 option.setName("reason")
-                    // .setNameLocalizations(globalCommandLocales.global.variable.reason.name)
+                    .setNameLocalizations(globalCommandLocales.global.variable.reason.name)
                     .setDescription("Reason for the ban")
-                    // .setDescriptionLocalizations(globalCommandLocales.global.variable.reason.description)
+                    .setDescriptionLocalizations(globalCommandLocales.global.variable.reason.description)
                     .setRequired(false)
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("kill")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.kill.name)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.kill.name)
                 .setDescription("Kills a player")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.kill.description)
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.kill.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -332,9 +331,9 @@ const command = {
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("op")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.op.name)
-                .setDescription("Ops a player")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.op.description)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.op.name)
+                .setDescription("Grants a player operator status")
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.op.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -350,9 +349,9 @@ const command = {
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("deop")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.deop.name)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.deop.name)
                 .setDescription("Deops a player")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.deop.description)
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.deop.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
@@ -368,9 +367,9 @@ const command = {
                 )
         ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("oplist")
-            // .setNameLocalizations(minecraftCommandLocales.minecraft.oplist.name)
-                .setDescription("Lists all ops")
-            // .setDescriptionLocalizations(minecraftCommandLocales.minecraft.oplist.description)
+                .setNameLocalizations(minecraftCommandLocales.minecraft.oplist.name)
+                .setDescription("Lists the operators")
+                .setDescriptionLocalizations(minecraftCommandLocales.minecraft.oplist.description)
                 .addStringOption((option: SlashCommandStringOption) =>
                     option.setName("server_name")
                         .setNameLocalizations(globalCommandLocales.global.variable.server_name.name)
