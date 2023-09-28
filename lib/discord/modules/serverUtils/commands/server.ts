@@ -213,23 +213,19 @@ const command = {
         }
 
         // Handle subcommands
+        const serverName: string = interaction.options.getString("server_name");
+        if (serverName !== null && await serverNotExists(serverName)) return;
         switch (subcommand) {
-
             // List servers
             case 'list':
-                const servers: string[] = await serverManager.listServers();
+                const servers: string[] = serverManager.listServers();
                 embed.title = "Available Servers";
                 embed.description = servers.join(", ");
                 embed.color = EmbedColors.GREEN;
                 break;
-
             // Start a server
             case 'start': {
-                const serverName: string = interaction.options.getString("server_name");
-                if (await serverNotExists(serverName)) return;
-
                 const result: ActionResult<any> = await serverManager.startServer(serverName);
-
                 embed.title = serverName;
                 if (result.Status === true) {
                     embed.description = "Started server " + serverName + ".";
@@ -239,24 +235,16 @@ const command = {
                 }
                 break;
             }
-
             // Stop a server
             case 'stop': {
-                const serverName: string = interaction.options.getString("server_name");
-                if (await serverNotExists(serverName)) return;
-
                 await serverManager.stopServer(serverName);
                 embed.title = serverName;
                 embed.description = "Stopped server " + serverName + ".";
                 embed.color = EmbedColors.GREEN;
                 break;
             }
-
             // Restart a server
             case 'restart': {
-                const serverName: string = interaction.options.getString("server_name");
-                if (await serverNotExists(serverName)) return;
-
                 const result: ActionResult<any> = await serverManager.restartServer(serverName);
                 embed.title = serverName;
                 if (result.Status === true) {
@@ -267,24 +255,16 @@ const command = {
                 }
                 break;
             }
-
             // Kill a server
             case 'kill': {
-                const serverName: string = interaction.options.getString("server_name");
-                if (await serverNotExists(serverName)) return;
-
                 await serverManager.killServer(serverName);
                 embed.title = serverName;
                 embed.description = "Killed server " + serverName + ".";
                 embed.color = EmbedColors.GREEN;
                 break;
             }
-
             // Put a server to sleep
             case 'sleep': {
-                const serverName: string = interaction.options.getString("server_name");
-                if (await serverNotExists(serverName)) return;
-
                 const result: ActionResult<any> = await serverManager.sleepServer(serverName);
                 embed.title = serverName;
                 if (result.Status === true) {
@@ -295,13 +275,9 @@ const command = {
                 }
                 break;
             }
-
             // Send a command to a server
             case 'send': {
-                const serverName: string = interaction.options.getString("server_name");
                 const command: string = interaction.options.getString("command");
-                if (await serverNotExists(serverName)) return;
-
                 await serverManager.sendConsoleMessageToServer(serverName, command);
                 embed.title = serverName;
                 embed.description = "Sent command to server " + serverName + ".";
@@ -311,15 +287,10 @@ const command = {
 
             // Get the status of a server
             case 'status':
-                const serverName: string = interaction.options.getString("server_name");
-                if (await serverNotExists(serverName)) return;
-
                 const status: Status = await serverManager.getServerStatus(serverName);
-
                 let state: string = lookupState(status.State);
-
                 embed.title = serverName;
-                // embed.description = "Status of server " + serverName + ":";
+                embed.description = "Status of server " + serverName + ":";
                 embed.description = "";
                 embed.fields = [
                     {
@@ -370,17 +341,13 @@ const command = {
                         embed.color = EmbedColors.RED;
                         break;
                 }
-
                 break;
 
             // Backup a server
             case 'backup': {
-                const serverName: string = interaction.options.getString("server_name");
                 const backupName: string = interaction.options.getString("backup_name");
                 const description: string = interaction.options.getString("description");
                 const isSticky: boolean = interaction.options.getBoolean("is_sticky");
-                if (await serverNotExists(serverName)) return;
-
                 const result: ActionResult<any> = await serverManager.backupServer(serverName, backupName, description, isSticky);
                 embed.title = serverName;
                 if (result.Status === true) {
@@ -394,9 +361,6 @@ const command = {
 
             // Get the players of a server
             case 'players':{
-                const serverName: string = interaction.options.getString("server_name");
-                if (await serverNotExists(serverName)) return;
-
                 const players: string[] = await serverManager.parsePlayerList(
                     await serverManager.getPlayerList(serverName)
                 );
@@ -408,7 +372,6 @@ const command = {
             // Find the server that a player is on
             case 'find':{
                 const playerName: string = interaction.options.getString("player_name");
-
                 const server: string = await serverManager.findPlayer(playerName);
                 embed.title = "Finding player " + playerName;
                 if (server) {
