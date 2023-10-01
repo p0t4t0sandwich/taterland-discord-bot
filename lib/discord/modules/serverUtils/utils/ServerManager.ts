@@ -26,6 +26,8 @@ class ServerManager {
     private targetData: { [key: string]: InstanceData<IADSInstance, ADS | undefined> } = {};
     private instanceData: { [key: string]: InstanceData<Instance, CommonAPI | undefined> } = {};
 
+    // TODO: Make a new method that only adds/deletes intance names from the list
+    // TODO: Rewrite to copy the ampapi-stats-wrapper go implementation
     async initInstanceData(): Promise<void> {
         // Clear data
         this.targetData = {};

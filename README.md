@@ -1,6 +1,11 @@
 # Taterland Discord Bot
 
-## Description
+[![License](https://img.shields.io/github/license/p0t4t0sandwich/taterland-discord-bot?color=blue)](https://img.shields.io/github/downloads/p0t4t0sandwich/taterland-discord-bot/LICENSE)
+[![Github](https://img.shields.io/github/stars/p0t4t0sandwich/taterland-discord-bot)](https://github.com/p0t4t0sandwich/taterland-discord-bot)
+[![Github Issues](https://img.shields.io/github/issues/p0t4t0sandwich/taterland-discord-bot?label=Issues)](https://github.com/p0t4t0sandwich/taterland-discord-bot/issues)
+[![Discord](https://img.shields.io/discord/1067482396246683708?color=7289da&logo=discord&logoColor=white)](https://discord.neuralnexus.dev)
+[![wakatime](https://wakatime.com/badge/github/p0t4t0sandwich/taterland-discord-bot.svg)](https://wakatime.com/badge/github/p0t4t0sandwich/taterland-discord-bot)
+[![Docker Pulls](https://img.shields.io/docker/pulls/p0t4t0sandwich/taterland-discord-bot?label=Docker&logo=docker&color=2496ed)](https://hub.docker.com/r/p0t4t0sandwich/taterland-discord-bot)
 
 Discord bot for the Taterland Discord server.
 
