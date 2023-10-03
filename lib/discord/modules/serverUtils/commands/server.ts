@@ -27,6 +27,11 @@ const command = {
         .setDefaultMemberPermissions(0)
         .setDMPermission(true)
         .addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
+            subcommand.setName("refresh")
+                .setNameLocalizations(serverCommandLocales.refresh.name)
+                .setDescription("Refresh the server list")
+                .setDescriptionLocalizations(serverCommandLocales.list.description)
+        ).addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
             subcommand.setName("list")
                 .setNameLocalizations(serverCommandLocales.list.name)
                 .setDescription("List all servers")
@@ -216,6 +221,13 @@ const command = {
         const serverName: string = interaction.options.getString("server_name");
         if (serverName !== null && await serverNotExists(serverName)) return;
         switch (subcommand) {
+            // Refresh server list
+            case 'refresh':
+                await serverManager.initInstanceData();
+                embed.title = "Refreshed server list";
+                embed.description = "Refreshed server list.";
+                embed.color = EmbedColors.GREEN;
+                break;
             // List servers
             case 'list':
                 const servers: string[] = serverManager.listServers();

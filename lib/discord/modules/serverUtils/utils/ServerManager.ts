@@ -26,35 +26,86 @@ class ServerManager {
     private targetData: { [key: string]: InstanceData<IADSInstance, ADS | undefined> } = {};
     private instanceData: { [key: string]: InstanceData<Instance, CommonAPI | undefined> } = {};
 
-    // TODO: Make a new method that only adds/deletes intance names from the list
+    /**
+     * @method controllerApiLogin
+     * @description Logs into the controller API
+     * @returns {Promise<void>} The result of the action
+     */
+    async controllerApiLogin(): Promise<void> {
+        await this.controller.APILogin();
+    }
+
     // TODO: Rewrite to copy the ampapi-stats-wrapper go implementation
     async initInstanceData(): Promise<void> {
-        // Clear data
-        this.targetData = {};
-        this.instanceData = {};
-
-        await this.controller.APILogin();
-
         // Get all instances
-        const targets = (await this.controller.ADSModule.GetInstances()).result;
+        const targets: IADSInstance[] = (await this.controller.ADSModule.GetInstances()).result;
 
         for (const target of targets) {
-            // Store the target data
-            this.targetData[target.FriendlyName] = {
-                data: target,
-                api: undefined
-            };
+            const instanes: Instance[] = target.AvailableInstances;
+
+            // Check if the target exists
+            if (this.targetExists(target.FriendlyName)) {
+                // Update the target data
+                this.targetData[target.FriendlyName].data = target;
+            } else {
+                // Store the target data
+                this.targetData[target.FriendlyName] = {
+                    data: target,
+                    api: undefined
+                };
+            }
 
             // Store the instance data
             for (const instance of target.AvailableInstances) {
                 if (instance.Module === "ADS") continue
 
-                this.instanceData[instance.InstanceName] = {
-                    data: instance,
-                    api: undefined
-                };
+                // Check if the instance exists
+                if (this.instanceExists(instance.InstanceName)) {
+                    // Update the instance data
+                    this.instanceData[instance.InstanceName].data = instance;
+                } else {
+                    // Store the instance data
+                    this.instanceData[instance.InstanceName] = {
+                        data: instance,
+                        api: undefined
+                    };
+                }
+            }
+
+            // Remove instances that are not present in instances
+            for (const instanceName of Object.keys(this.instanceData)) {
+                if (!instanes.map(instance => instance.InstanceName).includes(instanceName)) {
+                    delete this.instanceData[instanceName];
+                }
             }
         }
+
+        // Remove targets that are not present in targets
+        for (const targetName of Object.keys(this.targetData)) {
+            if (!targets.map(target => target.FriendlyName).includes(targetName)) {
+                delete this.targetData[targetName];
+            }
+        }
+    }
+
+    /**
+     * @method targetExists
+     * @description Checks if a target exists
+     * @param {string} targetName The name of the target to check
+     * @returns {boolean} Whether or not the target exists
+     */
+    targetExists(targetName: string): boolean {
+        return Object.keys(this.targetData).includes(targetName);
+    }
+
+    /**
+     * @method instanceExists
+     * @description Checks if an instance exists
+     * @param {string} instanceName The name of the instance to check
+     * @returns {boolean} Whether or not the instance exists
+     */
+    instanceExists(instanceName: string): boolean {
+        return Object.keys(this.instanceData).includes(instanceName);
     }
 
     /**
@@ -575,6 +626,7 @@ class ServerManager {
 }
 
 const serverManager = new ServerManager();
+await serverManager.controllerApiLogin();
 
 // Async setInterval to refresh the server manager
 async function init(): Promise<void> {
