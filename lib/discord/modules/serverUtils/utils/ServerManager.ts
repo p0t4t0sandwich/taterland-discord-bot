@@ -35,7 +35,11 @@ class ServerManager {
         await this.controller.APILogin();
     }
 
-    // TODO: Rewrite to copy the ampapi-stats-wrapper go implementation
+    /**
+     * @method initInstanceData
+     * @description Initializes the instance data
+     * @returns {Promise<void>} The result of the action
+     */
     async initInstanceData(): Promise<void> {
         // Get all instances
         const targets: IADSInstance[] = (await this.controller.ADSModule.GetInstances()).result;
