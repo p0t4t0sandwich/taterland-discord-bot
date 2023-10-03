@@ -190,11 +190,21 @@ const command = {
         // Log command
         logger.log(guildID, discordID, interaction.commandName + " " + subcommand);
 
-        const embed = {
+        interface Embed {
+            color: number,
+            title: string,
+            description: string,
+            fields?: {
+                name: string,
+                value: string | number,
+                inline?: boolean
+            }[]
+        }
+
+        const embed: Embed = {
             color: EmbedColors.RED,
             title: "Server command",
-            description: "An unknown error occurred.",
-            fields: [{}]
+            description: "An unknown error occurred."
         };
 
         if (!DISCORD_ADMIN_IDS.includes(discordID)) {
@@ -206,7 +216,7 @@ const command = {
 
         // Local functions
         async function serverNotExists(serverName: string): Promise<boolean> {
-            if (!serverManager.serverExists(serverName)) {
+            if (!serverManager.instanceExists(serverName)) {
                 await interaction.editReply({ embeds: [{
                     color: EmbedColors.RED,
                     title: "Server not found",
@@ -345,9 +355,6 @@ const command = {
                         break;
                     case 'Sleeping':
                         embed.color = EmbedColors.YELLOW;
-                        break;
-                    case 'Failed':
-                        embed.color = EmbedColors.RED;
                         break;
                     default:
                         embed.color = EmbedColors.RED;

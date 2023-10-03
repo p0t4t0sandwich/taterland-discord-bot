@@ -404,7 +404,7 @@ const command = {
 
         // Local functions
         async function serverNotExists(serverName: string): Promise<boolean> {
-            if (!serverManager.serverExists(serverName)) {
+            if (!serverManager.instanceExists(serverName)) {
                 await interaction.editReply({ embeds: [{
                     color: EmbedColors.RED,
                     title: "Server not found",

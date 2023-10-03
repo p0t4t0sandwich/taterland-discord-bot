@@ -60,7 +60,7 @@ class ServerManager {
             }
 
             // Store the instance data
-            for (const instance of target.AvailableInstances) {
+            for (const instance of instanes) {
                 if (instance.Module === "ADS") continue
 
                 // Check if the instance exists
@@ -75,19 +75,19 @@ class ServerManager {
                     };
                 }
             }
-
-            // Remove instances that are not present in instances
-            for (const instanceName of Object.keys(this.instanceData)) {
-                if (!instanes.map(instance => instance.InstanceName).includes(instanceName)) {
-                    delete this.instanceData[instanceName];
-                }
-            }
         }
 
-        // Remove targets that are not present in targets
+        // Remove targetData targets that are not present in targets
         for (const targetName of Object.keys(this.targetData)) {
             if (!targets.map(target => target.FriendlyName).includes(targetName)) {
                 delete this.targetData[targetName];
+            }
+
+            // Remove instanceData instances that are not present in targets.AvailableInstances
+            for (const instanceName of Object.keys(this.instanceData)) {
+                if (!targets.map(target => target.AvailableInstances.map(instance => instance.InstanceName)).flat().includes(instanceName)) {
+                    delete this.instanceData[instanceName];
+                }
             }
         }
     }
@@ -184,16 +184,6 @@ class ServerManager {
      */
     listServers(): string[] {
         return Object.keys(this.instanceData);
-    }
-
-    /**
-     * @method serverExists
-     * @description Checks if a server exists
-     * @param {string} instanceName The name of the instance to check
-     * @returns {boolean} Whether or not the server exists
-     */
-    serverExists(instanceName: string): boolean {
-        return Object.keys(this.instanceData).includes(instanceName);
     }
 
     /**
@@ -314,7 +304,7 @@ class ServerManager {
      * @returns {boolean} Whether the instance is a Minecraft server
      */
     isMinecraftServer(instanceName: string): boolean {
-        if (!this.serverExists(instanceName)) return false;
+        if (!this.instanceExists(instanceName)) return false;
         return this.instanceData[instanceName].data.Module === "Minecraft";
     }
 
