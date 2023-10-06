@@ -34,7 +34,7 @@ const autoResponses: AutoResponseMessage[] = [
             .setColor(EmbedColors.YELLOW)
     },
     {
-        match: ["cracked", "pirated", "crack", "premium", "offline mode"],
+        match: ["cracked", "pirated", "premium", "offline mode"],
         reply: new EmbedBuilder()
             .setTitle("Note on Cracked/Pirated/Offline Clients")
             .setDescription("We don't support, or provide support for, cracked/pirated clients.\nPlease purchase the game.")
@@ -100,7 +100,18 @@ const autoResponses: AutoResponseMessage[] = [
                     value: "https://discord.com/channels/800934783541968916/800949839067480105"
                 }
             ])
-    }
+    },
+    // {
+    //     match: ["fuck"],
+    //     reply: async (message: Message): Promise<string | EmbedBuilder> => {
+    //         await message.delete();
+    //         return new EmbedBuilder()
+    //             .setTitle("We dont say that here!")
+    //             .setDescription("Please refrain from using that sort of language.")
+    //             .setColor(EmbedColors.RED)
+    //             .setThumbnail("https://cdn.discordapp.com/icons/800934783541968916/3edd5bb792b2f1bcc8b9609bfc69efac.webp")
+    //     }
+    // }
 ];
 
 /**
