@@ -5,16 +5,16 @@
 
 import { SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from 'discord.js';
 
-import { Logger } from '../../../../utils/Logger.js';
+import { Logger } from '../../utils/Logger.js';
 
 // Import locales
-import { locales as globalCommandLocales } from '../../../../../locales/commands/global.js';
-import { locales as instanceCommandLocales } from '../../../../../locales/commands/instance.js';
-import { serverManager } from '../utils/ServerManager.js';
-import { EmbedColors } from '../../../../utils/EmbedColors.js';
+import { locales as globalCommandLocales } from '../../../locales/commands/global.js';
+import { locales as instanceCommandLocales } from '../../../locales/commands/instance.js';
+import { serverManager } from '../modules/serverUtils/ServerManager.js';
+import { EmbedColors } from '../../utils/EmbedColors.js';
+import { clientId } from '../DiscordBot.js';
 
 const logger: Logger = new Logger('instanceCommand', 'discord');
-const clientId: string = <string><unknown>process.env.DISCORD_CLIENT_ID;
 const DISCORD_ADMIN_IDS: string[] = (<string><unknown>process.env.DISCORD_ADMIN_IDS).split(",");
 
 const command = {

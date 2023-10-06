@@ -5,17 +5,17 @@
 
 import { SlashCommandBooleanOption, SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder } from 'discord.js';
 
-import { Logger } from '../../../../utils/Logger.js';
+import { Logger } from '../../utils/Logger.js';
+import { clientId } from '../DiscordBot.js';
 
 // Import locales
-import { locales as globalCommandLocales } from '../../../../../locales/commands/global.js';
-import { locales as serverCommandLocales } from '../../../../../locales/commands/server.js';
-import { serverManager } from '../utils/ServerManager.js';
+import { locales as globalCommandLocales } from '../../../locales/commands/global.js';
+import { locales as serverCommandLocales } from '../../../locales/commands/server.js';
+import { serverManager } from '../modules/serverUtils/ServerManager.js';
 import { ActionResult, Status, lookupState } from '@neuralnexus/ampapi';
-import { EmbedColors } from '../../../../utils/EmbedColors.js';
+import { EmbedColors } from '../../utils/EmbedColors.js';
 
 const logger: Logger = new Logger('serverCommand', 'discord');
-const clientId: string = <string><unknown>process.env.DISCORD_CLIENT_ID;
 const DISCORD_ADMIN_IDS: string[] = (<string><unknown>process.env.DISCORD_ADMIN_IDS).split(",");
 
 const command = {

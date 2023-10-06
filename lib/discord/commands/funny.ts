@@ -5,14 +5,15 @@
 
 import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 
-import { getDadjoke, getFortune, getMeowFact, getUselessFact } from '../utils/apiTools.js';
-import { Logger } from '../../../../utils/Logger.js';
+import { getDadjoke, getFortune, getMeowFact, getUselessFact } from '../modules/funny/apiTools.js';
+import { Logger } from '../../utils/Logger.js';
+import { clientId } from '../DiscordBot.js';
 
 // Import locales
-import { locales as funnyCommandLocales } from '../../../../../locales/commands/funny.js';
+import { locales as funnyCommandLocales } from '../../../locales/commands/funny.js';
+
 
 const logger: Logger = new Logger('funnyCommand', 'discord');
-const clientId: string = <string><unknown>process.env.DISCORD_CLIENT_ID;
 
 const command = {
     data: new SlashCommandBuilder()
