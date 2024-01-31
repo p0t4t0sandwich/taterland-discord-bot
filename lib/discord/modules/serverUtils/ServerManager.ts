@@ -42,7 +42,7 @@ class ServerManager {
      */
     async initInstanceData(): Promise<void> {
         // Get all instances
-        const targets: IADSInstance[] = (await this.controller.ADSModule.GetInstances()).result;
+        const targets: IADSInstance[] = (await this.controller.ADSModule.GetInstances());
 
         for (const target of targets) {
             const instanes: Instance[] = target.AvailableInstances;
@@ -279,7 +279,7 @@ class ServerManager {
      * @returns {Promise<{ [key: string]: string }>} The player list of the server
      */
     async getPlayerList(instanceName: string): Promise<{ [key: string]: string }> {
-        return (await (await this.getIntanceAPI(instanceName)).Core.GetUserList()).result
+        return (await (await this.getIntanceAPI(instanceName)).Core.GetUserList())
     }
 
     /**
