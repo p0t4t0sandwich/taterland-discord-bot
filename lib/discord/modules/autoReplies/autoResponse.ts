@@ -27,7 +27,7 @@ interface AutoResponseMessage {
 
 const autoResponses: AutoResponseMessage[] = [
     {
-        match: ["eta"],
+        match: ["(^| )eta($|[ ?\.!\-_s])"],
         reply: new EmbedBuilder()
             .setTitle("Soon™")
             .setDescription("We don't normally give ETAs for updates. We're working on it, and it'll be out when it's ready.")
