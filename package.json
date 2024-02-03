@@ -12,13 +12,13 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@neuralnexus/ampapi": "1.0.18",
+    "@neuralnexus/ampapi": "1.0.19",
     "discord.js": "^14.11.0"
   },
   "bugs": {
-    "url": "https://github.com/p0t4t0sandwich/ampapi-js/issues"
+    "url": "https://github.com/p0t4t0sandwich/taterland-discord-bot/issues"
   },
-  "homepage": "https://github.com/p0t4t0sandwich/ampapi-js#readme",
+  "homepage": "https://github.com/p0t4t0sandwich/taterland-discord-bot#readme",
   "licenses": [
     {
       "type": "GPL3",
